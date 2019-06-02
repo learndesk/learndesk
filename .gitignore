@@ -11,3 +11,7 @@ out
 
 # My stuff
 *.nogit.*
+
+# Eclipse
+/.project
+/.classpath

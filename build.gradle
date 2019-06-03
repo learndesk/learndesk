@@ -39,7 +39,7 @@ dependencies {
 
     implementation 'io.lettuce:lettuce-core:5.1.6.RELEASE'
     implementation 'org.mongodb:mongo-java-driver:3.8.2'
-    implementation 'io.github.cdimascio:java-dotenv:3.1.2'
+    implementation 'io.github.cdimascio:java-dotenv:5.1.0'
     implementation 'org.javadelight:delight-metrics:0.0.6'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

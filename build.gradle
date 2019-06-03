@@ -32,7 +32,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'io.vertx:vertx-web:3.7.0'
+    implementation 'io.vertx:vertx-web:3.7.1'
 
     implementation 'io.sentry:sentry-logback:1.7.22'
     implementation 'ch.qos.logback:logback-classic:1.2.3'

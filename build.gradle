@@ -38,7 +38,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 
     implementation 'io.lettuce:lettuce-core:5.1.6.RELEASE'
-    implementation 'org.mongodb:mongo-java-driver:3.8.2'
+    implementation 'org.mongodb:mongo-java-driver:3.10.2'
     implementation 'io.github.cdimascio:java-dotenv:3.1.2'
     implementation 'org.javadelight:delight-metrics:0.0.6'
 

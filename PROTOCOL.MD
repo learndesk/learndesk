@@ -173,8 +173,15 @@ Response format:
 | param | type | description |
 | ----- | ----- | ----- |
 | name | string | Group's name |
+| id | string | Group's ID |
 | owner | string | The group's owner's ID |
-| members | string[] | The IDs of the members of the group |
+| members | string[] | The IDs of the members of the group (must NOT contain owner) |
+| image | string | Group's image ID |
+| creation_date | ISO8601 | Group's creation date |
+
+
+> PUT /group/info/
+
 
 ## Courses related
 

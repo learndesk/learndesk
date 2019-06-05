@@ -1,7 +1,6 @@
 # Protocol documentation
 
-**Note**: We're only documenting API scheme, without adding base path. It may vary depending on your
-configuration.
+**Note**: We're only documenting API scheme, without adding base path. It may vary depending on your configuration.
 
 ## General
 
@@ -105,14 +104,14 @@ Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
-| id | string | The user's ID |
+| id | string | the user's ID |
 | username | string | the username |
-| firstname | string | The firstname |
-| lastname | string | The lastname |
-| birthday | ISO8601 timestamp | The user's birthday date |
-| avatar | string | The avatar's ID |
+| firstname | ?string | the firstname |
+| lastname | ?string | the lastname |
+| birthday | ?ISO8601 timestamp | The user's birthday date |
+| avatar | ?string | the avatar's ID |
 | verified | boolean | if the email is verified |
-| flag | int | bitwise number to define flags |
+| flag | number | bitwise number to define flags |
 | mfa | boolean | whether the MFA is set or not |
 
 
@@ -124,13 +123,13 @@ Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
-| id | string | The user's ID |
+| id | string | the user's ID |
 | username | string | the username |
-| firstname | ?string | The firstname |
-| lastname | ?string | The lastname |
-| birthday | ?ISO8601 timestamp | The user's birthday date |
-| avatar | string | The avatar's ID |
-| flag | int | bitwise number to define flags |
+| firstname | ?string | the firstname |
+| lastname | ?string | the lastname |
+| birthday | ?ISO8601 timestamp | the user's birthday date |
+| avatar | ?string | the avatar's ID |
+| flag | number | bitwise number to define flags |
 
 
 > PATCH /account
@@ -139,12 +138,12 @@ Edit the current user's account information
 
 | field | type | description |
 | ----- | ----- | ----- |
-| firstname | string | The firstname |
-| lastname | string | The lastname |
-| birthday | ISO8601 | The user's birthday date |
-| username | string | the username |
-| password | string | The password may be required to change certain infos (names, username) |
-| new_password | string | the new password, or null if no change was requested |
+| firstname? | string | the firstname |
+| lastname? | string | the lastname |
+| birthday? | ISO8601 | the user's birthday date |
+| username? | string | the username |
+| new_password? | string | the new password |
+| password | string | the current password |
 
 
 > PUT /account/avatar
@@ -159,20 +158,20 @@ Schedules an account for deletion in the following 14 days
 
 | field | type | description |
 | ----- | ----- | ----- |
-| password | string | The password |
-| mfa_code | string | The current MFA code or backup code, if enabled |
+| password | string | the current password |
+| mfa_code | string | the current MFA code or backup code, if enabled |
 
 ### MFA
 
 > GET /account/mfa
 
-Requests a QR code to initiate the MFA
+Requests a key to initiate the MFA. QR code will have to be generated client-side
 
 Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
-| key | string | The key for MFA |
+| key | string | the key for MFA |
 
 
 > POST /account/mfa
@@ -181,23 +180,23 @@ Enable MFA using the current code
 
 | field | type | description |
 | ----- | ----- | ----- |
-| code | string | The current MFA code |
+| code | string | the current MFA code |
 
 Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
-| backup_codes | string[] | The backup codes |
+| backup_codes | string[] | the backup codes |
 
 
 > DELETE /account/mfa
 
-Disable MFA. Requires password and MFA code.
+Disable MFA. Requires password and MFA code
 
 | field | type | description |
 | ----- | ----- | ----- |
-| code | string | The current MFA code or backup |
-| password | string | The password |
+| code | string | the current MFA code or backup |
+| password | string | the password |
 
 
 > POST /account/mfa/renew
@@ -206,13 +205,13 @@ Request a renew of the MFA backup codes. Note: old ones will be invalidated
 
 | field | type | description |
 | ----- | ----- | ----- |
-| password | string | The password |
+| password | string | the password |
 
 Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
-| backup_codes | string[] | The backup codes |
+| backup_codes | string[] | the backup codes |
 
 ### GDPR
 
@@ -229,11 +228,11 @@ NB: Certain infos may be null if the user doesn't have the permissions to see th
 
 Response format:
 
-| param | type | description |
+| field | type | description |
 | ----- | ----- | ----- |
-| name | string | Group's name |
-| owner | string | The group's owner's ID |
-| members | string[] | The IDs of the members of the group |
+| name | string | group's name |
+| owner | string | the group's owner's ID |
+| members | string[] | the IDs of the members of the group |
 
 ## Courses related
 

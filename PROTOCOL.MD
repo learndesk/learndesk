@@ -166,7 +166,7 @@ TBD
 > GET /group/info/:group
 
 Request information about a certain group.
-NB: Certain infos may be null if the use doesn't have the permissions to see them, or if they are not set.
+NB: Certain infos may be null if the user doesn't have the permissions to see them, or if they are not set.
 
 Response format:
 
@@ -181,7 +181,7 @@ Response format:
 ### Courses
 
 
-### Eeference cards
+### Reference cards
 
 
 

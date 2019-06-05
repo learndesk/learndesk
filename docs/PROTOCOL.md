@@ -56,6 +56,17 @@ this is performed with the `Authorization` HTTP header
 Authorization: TOKEN
 ```
 
+### Optional and nullable field
+
+Fields that are optional (may be omitted in payload) are suffixed with a question mark, and fields that can contain
+`null` have their type prefixed with a question mark.
+
+| field | type |
+|----|----|
+| optional? | string |
+| nullable | ?string |
+| optional_and_nullable? | ?string |
+
 ## Accounts
 
 ### Auth

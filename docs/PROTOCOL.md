@@ -7,7 +7,8 @@
 ### API Versioning
 
 Learndesk exposes different versions of the API. You can specify it by prefixing the endpoint by `v{version_number}/`.
-Omitting it will make you use the latest stable version of the API.
+Omitting it will make you use the latest stable version of the API. Using a discontinued version of the API will return
+400 Bad Request.
 
 | version | status |
 |----|----|
@@ -20,8 +21,9 @@ The API may return errors, and those errors are sent in the same format all the 
 | field | type | description |
 | ----- | ----- | ----- |
 | status | number | HTTP status of the request |
-| code | number | error code, see [CODES.md](https://github.com/learndesk/backend/blob/master/docs/CODES.md) for more details |
 | message | string | error message associated with the code |
+
+Note: We'll only document possible HTTP return codes, but not the codes it may return.
 
 ### Rate limiting
 
@@ -67,9 +69,44 @@ Fields that are optional (may be omitted in payload) are suffixed with a questio
 | nullable | ?string |
 | optional_and_nullable? | ?string |
 
-## Accounts
+## Types
 
-### Auth
+### User Flags
+
+User flags are internally used to save attributes about the users, like permissions or badges.
+
+| value | description |
+|----|----|
+| 0 | none |
+| 1 << 0 | Learndesk Staff |
+| 1 << 1 | Teacher |
+
+### Avatar Data
+
+Avatar data is a [Data URI scheme](https://en.wikipedia.org/wiki/Data_URI_scheme), that looks like:
+```
+data:image/jpeg;base64,JPEG_DATA_ENCODED
+```
+Supported formats are JPG, PNG and GIFs. If an animated avatar is received, it'll be cropped to the 1st frame. EXIF
+data will be wiped.
+
+## Endpoints
+
+### Accounts
+
+#### Auth
+
+> POST /auth/register
+
+Registers an account
+
+| field | type | description |
+| ----- | ----- | ----- |
+| email | string | email address |
+| username | string | username for the new account |
+| password | string | password of the new account |
+
+Possible response status code: 201, 400
 
 > POST /auth/login
 
@@ -80,12 +117,14 @@ Attempts to login
 | username | string | the username to attempt login |
 | password | string | the password to attempt login |
 
+Possible response status code: 200, 401, 403, 404
+
 Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
 | mfa_required | boolean | true if MFA is required, false otherwise |
-| token | string | the non-MFA token (see [Authentication](#Authentication)) |
+| token | string | the non-MFA token (see [Authentication](#authentication)) |
 
 
 > POST /auth/mfa
@@ -96,20 +135,24 @@ Attempts to pass MFA challenge, if required
 | ----- | ----- | ----- | ----- |
 | mfa | string | MFA or backup code | yes |
 
+Possible response status code: 200, 401
+
 Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
-| token | string | the MFA token (see [Authentication](#Authentication)) |
+| token | string | the MFA token (see [Authentication](#authentication)) |
 
 
 > TBD: Request lost password
 
-### Account
+#### Account
 
 > GET /account/me
 
 Requests the current user's information
+
+Possible response status code: 200, 401
 
 Response format:
 
@@ -122,13 +165,15 @@ Response format:
 | birthday | ?ISO8601 timestamp | The user's birthday date |
 | avatar | ?string | the avatar's ID |
 | verified | boolean | if the email is verified |
-| flag | number | bitwise number to define flags |
+| flag | number | the [flags](#user-flags) of this user |
 | mfa | boolean | whether the MFA is set or not |
 
 
 > GET /account/:account_id
 
 Requests the user's information
+
+Possible response status code: 200, 401
 
 Response format:
 
@@ -140,27 +185,27 @@ Response format:
 | lastname | ?string | the lastname |
 | birthday | ?ISO8601 timestamp | the user's birthday date |
 | avatar | ?string | the avatar's ID |
-| flag | number | bitwise number to define flags |
+| locale | ?string | the user's chosen locale |
+| flag | number | the [flags](#user-flags) of this user |
 
 
-> PATCH /account
+> PUT/PATCH /account
 
 Edit the current user's account information
 
 | field | type | description |
 | ----- | ----- | ----- |
+| username? | string | the username |
 | firstname? | string | the firstname |
 | lastname? | string | the lastname |
-| birthday? | ISO8601 | the user's birthday date |
-| username? | string | the username |
+| birthday? | ISO8601 timestamp | the user's birthday date |
+| avatar? | [avatar data](#avatar-data) | the new user's avatar |
 | new_password? | string | the new password |
 | password | string | the current password |
 
+Possible response status code: 200, 400, 401, 413, 415
 
-> PUT /account/avatar
-
-Change the current user's avatar. If an animated avatar is sent, it'll be cropped to the 1st frame (GIFs, APNGs, ...)<br>
-Allowed formats: JPEG, PNG, GIF, WEBP, BMP
+Response format: the updated user, see `GET /account/me`
 
 
 > DELETE /account
@@ -172,7 +217,9 @@ Schedules an account for deletion in the following 14 days
 | password | string | the current password |
 | mfa_code | string | the current MFA code or backup code, if enabled |
 
-### MFA
+Possible response status code: 204, 400, 401
+
+#### MFA
 
 > GET /account/mfa
 
@@ -184,6 +231,8 @@ Response format:
 | ----- | ----- | ----- |
 | key | string | the key for MFA |
 
+Possible response status code: 200, 400, 401
+
 
 > POST /account/mfa
 
@@ -192,6 +241,8 @@ Enable MFA using the current code
 | field | type | description |
 | ----- | ----- | ----- |
 | code | string | the current MFA code |
+
+Possible response status code: 200, 400, 401
 
 Response format:
 
@@ -209,6 +260,8 @@ Disable MFA. Requires password and MFA code
 | code | string | the current MFA code or backup |
 | password | string | the password |
 
+Possible response status code: 204, 400, 401
+
 
 > POST /account/mfa/renew
 
@@ -218,24 +271,25 @@ Request a renew of the MFA backup codes. Note: old ones will be invalidated
 | ----- | ----- | ----- |
 | password | string | the password |
 
+Possible response status code: 200, 400, 401
+
 Response format:
 
 | field | type | description |
 | ----- | ----- | ----- |
 | backup_codes | string[] | the backup codes |
 
-### GDPR
+#### GDPR
 
 TBD
 
-## Groups related
+### Groups
 
-### Group administration
-
-> GET /group/info/:group
+> GET /group/:group_id
 
 Request information about a certain group.
-NB: Certain infos may be null if the user doesn't have the permissions to see them, or if they are not set.
+
+Possible response status code: 200, 401, 403
 
 Response format:
 
@@ -251,9 +305,21 @@ Response format:
 
 > PUT /group/info/
 
-## Courses related
-
 ### Courses
 
+#### Management
 
-### Reference cards
+#### Sharing
+
+### Revision sheets
+
+#### Management
+
+#### Sharing
+
+<!--
+possible api path:
+/revsheets/
+/sheets/
+/revsh/
+-->

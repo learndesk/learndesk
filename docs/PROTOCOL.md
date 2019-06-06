@@ -315,7 +315,6 @@ Response format:
 | owner | string | the group's owner's ID |
 | members | [snowflake](#snowflakes)[] | members IDs (excludes owner) |
 | image | string | group's image ID |
-| creation_date | ISO8601 | group's creation date |
 
 
 > PUT/PATCH /group/:group_id

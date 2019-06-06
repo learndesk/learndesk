@@ -7,7 +7,7 @@ build
 out
 
 # Env
-*.env
+config.properties
 
 # My stuff
 *.nogit.*

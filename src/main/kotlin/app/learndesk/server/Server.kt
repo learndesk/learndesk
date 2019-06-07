@@ -48,6 +48,12 @@ object Server {
         }
 
         // Routes
+        router.get("/coffee").handler {
+            it.response()
+                    .setStatusCode(418)
+                    .setStatusMessage("I'm a teapot")
+                    .end(encodeError(418, "i'm a teapot"))
+        }
 
         // 404
         router.route().handler {

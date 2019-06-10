@@ -157,7 +157,7 @@ Response format: **array** of messages
 | id | [snowflake](REFERENCE.md#snowflakes) | message id |
 | author | object | partial user object of the message author |
 | author.id | [snowflake](REFERENCE.md#snowflakes) | author's id |
-| author.name | [snowflake](REFERENCE.md#snowflakes) | author's display name |
+| author.name | string | author's display name |
 | author.avatar | string | author's avatar hash |
 | contents | string | message contents |
 | edited_at | ?ISO8601 timestamp | when this message was edited (or null if never) |
@@ -254,3 +254,45 @@ Removes your reaction on a message
 Possible response status code: 204, 401, 403, 404
 
 Response format: updated **array** of reactions, see `POST /channels/groups/:group_id/messages/:message_id/reactions`
+
+### Bookmarks
+
+Bookmarks are locally "pinned" messages that will show up in the same place on the UI.
+
+> GET /bookmarks
+
+Gets a list of all bookmarked messages
+
+Possible response status code: 200, 401
+
+Response format: **array** of partial messages
+
+| field | type | description |
+|----|----|----|
+| id | [snowflake](REFERENCE.md#snowflakes) | message id |
+| group_id | ?[snowflake](REFERENCE.md#snowflakes) | group id if the message is in a group |
+| author | object | partial author object |
+| author.id | [snowflake](REFERENCE.md#snowflakes) | author's id |
+| author.name | string | author's display name |
+| author.avatar | string | author's avatar hash |
+| contents | string | message contents |
+
+
+> POST /bookmarks
+
+Bookmarks a message. An user can have up to 100 bookmarked messages
+
+| field | type | description |
+|----|----|----|
+| message | [snowflake](REFERENCE.md#snowflakes) | message id |
+
+Possible response status code: 201, 401, 403, 404
+
+Response format: the new bookmark, see `GET /bookmarks` 
+
+
+> DELETE /bookmarks/:message_id
+
+Removes a message from the bookmarked list
+
+Possible response status code: 204, 401, 404

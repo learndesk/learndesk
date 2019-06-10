@@ -14,7 +14,7 @@ Creates a group. Note: An user can only own up to 10 groups. Teachers can own up
 |----|----|----|
 | name | string | group name |
 | icon? | [avatar data](REFERENCE.md#avatar-data) | group icon |
-| members? | [snowflake](REFERENCE.md#snowflakes)[] | members of the group |
+| members? | [user identifier](REFERENCE.md#user-identifier)[] | members of the group |
 
 Possible response status code: 201, 400, 401
 
@@ -22,7 +22,7 @@ Response format: The created group, see `/groups/:group_id` plus extra fields:
 
 | field | type | description |
 |----|----|----|
-| failed_invites | [snowflake](REFERENCE.md#snowflakes)[] | member that cannot be invited due to their privacy settings
+| failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | member that cannot be invited due to their privacy settings
 
 
 > GET /groups/:group_id
@@ -71,7 +71,7 @@ Adds members to the group. Can only be performed by the group owner.<br>
 
 | field | type | description |
 |----|----|----|
-| members | [snowflake](REFERENCE.md#snowflakes) \| [snowflake](REFERENCE.md#snowflakes)[] | user or users to add to the group | 
+| members | [user identifier](REFERENCE.md#user-identifier) \| [user identifier](REFERENCE.md#user-identifier)[] | user or users to add to the group | 
 
 Possible response status code: 200, 400, 401, 403, 404
 
@@ -80,7 +80,7 @@ Response format:
 | field | type | description |
 |----|----|----|
 | members | [snowflake](REFERENCE.md#snowflakes)[] | updated list of group members |
-| failed_invites | [snowflake](REFERENCE.md#snowflakes)[] | member that cannot be invited due to their privacy settings
+| failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | member that cannot be invited due to their privacy settings |
 
 
 > DELETE /groups/:group_id/members/:user_id

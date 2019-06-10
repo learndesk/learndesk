@@ -6,7 +6,7 @@ For more documentation about the gateway, wait for us to write docs lol
 
 ### Administration
 
-> POST /groups
+> POST /chat/groups
 
 Creates a group. Note: An user can only own up to 10 groups. Teachers can own up to 50 groups.
 
@@ -25,7 +25,7 @@ Response format: The created group, see `/groups/:group_id` plus extra fields:
 | failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | member that cannot be invited due to their privacy settings
 
 
-> GET /groups/:group_id
+> GET /chat/groups/:group_id
 
 Requests information about a certain group.
 
@@ -56,7 +56,7 @@ Possible response status code: 200, 400, 401, 403, 404, 413, 415
 Response format: the updated user, see `GET /group/:group_id`
 
 
-> DELETE /groups/:group_id
+> DELETE /chat/groups/:group_id
 
 Deletes a group. Can only be performed by the group owner.
 
@@ -64,7 +64,7 @@ Possible response status code: 204, 401, 403, 404
 
 ### Members management
 
-> POST /groups/:group_id/members
+> POST /chat/groups/:group_id/members
 
 Adds members to the group. Can only be performed by the group owner.<br>
 **Note**: If a single member in the request can't be invited, the whole batch will fail
@@ -83,14 +83,14 @@ Response format:
 | failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | member that cannot be invited due to their privacy settings |
 
 
-> DELETE /groups/:group_id/members/:user_id
+> DELETE /chat/groups/:group_id/members/:user_id
 
 Kicks a member from the group. Can only be performed by the group owner.
 
 Possible response status code: 204, 401, 403, 404
 
 
-> DELETE /groups/:group_id/members/me
+> DELETE /chat/groups/:group_id/members/me
 
 Leaves the group. Cannot be performed by the group owner.
 
@@ -102,8 +102,8 @@ Channels are a virtual resource that represents the place where are messages in 
 
 ### Metadata
 
-> GET /channels/groups/:group_id<br>
-> GET /channels/users/:user_id
+> GET /chat/channels/groups/:group_id<br>
+> GET /chat/channels/users/:user_id
 
 Gets information about the number of pings and the last read message id
 
@@ -117,8 +117,8 @@ Response format:
 | pings | number | the number of pings in the channel |
 
 
-> POST /channels/groups/:group_id/ack<br>
-> POST /channels/users/:user_id/ack
+> POST /chat/channels/groups/:group_id/ack<br>
+> POST /chat/channels/users/:user_id/ack
 
 Marks a channel as read
 
@@ -126,8 +126,8 @@ Possible response status code: 204, 401, 403, 404
 
 ### Messages
 
-> POST /channels/groups/:group_id/messages<br>
-> POST /channels/users/:user_id/messages
+> POST /chat/channels/groups/:group_id/messages<br>
+> POST /chat/channels/users/:user_id/messages
 
 Posts a message in the group DM
 
@@ -137,8 +137,8 @@ Posts a message in the group DM
 
 Possible response status code: 204, 400, 401, 403, 404
 
-> GET /channels/groups/:group_id/messages<br>
-> GET /channels/users/:user_id/messages
+> GET /chat/channels/groups/:group_id/messages<br>
+> GET /chat/channels/users/:user_id/messages
 
 Returns the messages for the channel.
 
@@ -194,8 +194,8 @@ Response format: **array** of messages
 | joined | boolean | if the user joined, or left |
  
 
-> GET /channels/groups/:group_id/messages/pinned<br>
-> GET /channels/users/:user_id/messages/pinned
+> GET /chat/channels/groups/:group_id/messages/pinned<br>
+> GET /chat/channels/users/:user_id/messages/pinned
 
 Gets messages that should be pinned at the top of the chat box
 
@@ -218,8 +218,8 @@ Possible response status code: 200, 400, 401, 403, 404
 Response format: The updated message object, see `GET /channels/groups/:group_id/messages`
 
 
-> DELETE /channels/groups/:group_id/messages/:message_id<br>
-> DELETE /channels/users/:user_id/messages/:message_id
+> DELETE /chat/channels/groups/:group_id/messages/:message_id<br>
+> DELETE /chat/channels/users/:user_id/messages/:message_id
 
 Deletes a message. Can be only performed by the author.
 
@@ -227,8 +227,8 @@ Possible response status code: 204, 401, 403, 404
 
 ### Reactions
 
-> POST /channels/groups/:group_id/messages/:message_id/reactions<br>
-> POST /channels/users/:user_id/messages/:message_id/reactions
+> POST /chat/channels/groups/:group_id/messages/:message_id/reactions<br>
+> POST /chat/channels/users/:user_id/messages/:message_id/reactions
 
 Adds a reaction to a message. A message can have up to 10 different reactions
 
@@ -246,8 +246,8 @@ Response format: updated **array** of reactions
 | count | number | reaction count |
 
 
-> DELETE /channels/groups/:group_id/messages/:message_id/reactions/:reaction_name<br>
-> DELETE /channels/users/:user_id/messages/:message_id/reactions/:reaction_name
+> DELETE /chat/channels/groups/:group_id/messages/:message_id/reactions/:reaction_name<br>
+> DELETE /chat/channels/users/:user_id/messages/:message_id/reactions/:reaction_name
 
 Removes your reaction on a message
 
@@ -259,7 +259,7 @@ Response format: updated **array** of reactions, see `POST /channels/groups/:gro
 
 Bookmarks are locally "pinned" messages that will show up in the same place on the UI.
 
-> GET /bookmarks
+> GET /chat/bookmarks
 
 Gets a list of all bookmarked messages
 
@@ -278,7 +278,7 @@ Response format: **array** of partial messages
 | contents | string | message contents |
 
 
-> POST /bookmarks
+> POST /chat/bookmarks
 
 Bookmarks a message. An user can have up to 100 bookmarked messages
 
@@ -291,7 +291,7 @@ Possible response status code: 201, 401, 403, 404
 Response format: the new bookmark, see `GET /bookmarks` 
 
 
-> DELETE /bookmarks/:message_id
+> DELETE /chat/bookmarks/:message_id
 
 Removes a message from the bookmarked list
 

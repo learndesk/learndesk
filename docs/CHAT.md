@@ -22,7 +22,7 @@ Response format: The created group, see `/groups/:group_id` plus extra fields:
 
 | field | type | description |
 |----|----|----|
-| failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | member that cannot be invited due to their privacy settings
+| failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | members who can't be invited due to their privacy settings
 
 
 > GET /chat/groups/:group_id
@@ -80,7 +80,7 @@ Response format:
 | field | type | description |
 |----|----|----|
 | members | [snowflake](REFERENCE.md#snowflakes)[] | updated list of group members |
-| failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | member that cannot be invited due to their privacy settings |
+| failed_invites | [user identifier](REFERENCE.md#user-identifier)[] | members who can't be invited due to their privacy settings |
 
 
 > DELETE /chat/groups/:group_id/members/:user_id
@@ -183,7 +183,6 @@ Response format: **array** of messages
 | document | object | partial document object |
 | document.id | [snowflake](REFERENCE.md#snowflakes) | document id |
 | document.name | string | document name |
-| document.owner | [snowflake](REFERENCE.md#snowflakes) | document name |
 | document.invite | string | invite id (only for type 1) |
 
  - For type 4

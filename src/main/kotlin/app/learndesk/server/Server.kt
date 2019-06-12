@@ -18,7 +18,7 @@ object Server {
     private val router = Router.router(vertx)
     private val httpServer = vertx.createHttpServer()
 
-    fun startup () {
+    fun startup() {
         if (started) {
             throw IllegalStateException("Server is already up!")
         }
@@ -27,18 +27,19 @@ object Server {
         router.route().failureHandler {
             log.error("Error in HTTP handler", it.failure())
             it.response()
-                    .setStatusCode(500)
-                    .setStatusMessage("Internal Server Error")
-                    .putHeader("Content-Type", "application/json")
-                    .end(encodeError(500, "an internal server error occurred"))
+                .setStatusCode(500)
+                .setStatusMessage("Internal Server Error")
+                .putHeader("Content-Type", "application/json")
+                .end(encodeError(500, "an internal server error occurred"))
         }
 
         // Request headers
         router.route().handler {
-            log.debug("Received request {} {} from {}",
-                    it.request().method(),
-                    it.normalisedPath(),
-                    it.request().remoteAddress()
+            log.debug(
+                "Received request {} {} from {}",
+                it.request().method(),
+                it.normalisedPath(),
+                it.request().remoteAddress()
             )
 
             it.response().putHeader("Learndesk-Version", Version.VERSION)
@@ -50,17 +51,17 @@ object Server {
         // Routes
         router.get("/coffee").handler {
             it.response()
-                    .setStatusCode(418)
-                    .setStatusMessage("I'm a teapot")
-                    .end(encodeError(418, "i'm a teapot"))
+                .setStatusCode(418)
+                .setStatusMessage("I'm a teapot")
+                .end(encodeError(418, "i'm a teapot"))
         }
 
         // 404
         router.route().handler {
             it.response()
-                    .setStatusCode(404)
-                    .setStatusMessage("Not Found")
-                    .end(encodeError(404, "no endpoint matching your query found"))
+                .setStatusCode(404)
+                .setStatusMessage("Not Found")
+                .end(encodeError(404, "no endpoint matching your query found"))
         }
 
         // Listen
@@ -75,8 +76,8 @@ object Server {
 
     fun encodeError(status: Int, error: String): Buffer {
         return JsonObject()
-                .put("status", status)
-                .put("error", error)
-                .toBuffer()
+            .put("status", status)
+            .put("error", error)
+            .toBuffer()
     }
 }

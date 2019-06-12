@@ -66,6 +66,6 @@ object Learndesk {
         inputStream.close()
         PORT = properties.getProperty("port", "8000").toInt()
         AUTH_SECRET = properties.getProperty("auth.secret")
-                ?: throw IllegalStateException("auth.secret property can't be null!")
+            ?: throw IllegalStateException("auth.secret property can't be null!")
     }
 }

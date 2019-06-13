@@ -15,3 +15,6 @@ config.properties
 # Eclipse
 /.project
 /.classpath
+
+# RSA private keys
+.travisci/private_rsa_keys.tar.gz

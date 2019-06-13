@@ -42,7 +42,6 @@ object Server {
                 it.request().remoteAddress()
             )
 
-            it.response().putHeader("Learndesk-Version", Version.VERSION)
             it.response().putHeader("Learndesk-Commit", Version.COMMIT)
             it.response().putHeader("Content-Type", "application/json")
             it.next()

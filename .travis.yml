@@ -1,0 +1,40 @@
+language: java
+install: true
+
+jdk:
+  - openjdk11
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+jobs:
+  include:
+    - stage: tests
+      name: lint
+      script:
+        - chmod +x gradlew
+        - ./gradlew ktlint
+    - stage: tests
+      name: unit
+      script:
+        - chmod +x gradlew
+        - echo 'todo'
+    - stage: build
+      script:
+        - chmod +x gradlew
+        - ./gradlew shadowJar
+      if: branch = master OR branch = develop
+
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script: bash .travisci/deploy.sh
+        on:
+          all_branches: true
+          condition: $TRAVIS_BRANCH =~ ^master|develop$

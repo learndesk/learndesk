@@ -1,0 +1,20 @@
+{
+  "apps": [
+    {
+      "name": "backend",
+      "cwd": ".",
+      "script": "/usr/bin/java",
+      "args": [
+        "-jar",
+        "backend-0.1.0-all.jar"
+      ],
+      "watch": [
+        "backend-0.1.0-all.jar"
+      ],
+      "node_args": [],
+      "log_date_format": "YYYY-MM-DD HH:mm Z",
+      "exec_interpreter": "",
+      "exec_mode": "fork"
+    }
+  ]
+}

@@ -22,7 +22,7 @@ jobs:
         - "12"
       before_install: curl -o- -L https://yarnpkg.com/install.sh | bash
       install: cd emails && yarn
-      script: cd emails && yarn run lint
+      script: yarn run lint
 
     - stage: tests
       name: lint kotlin

@@ -10,6 +10,7 @@ before_cache:
 
 cache:
   directories:
+    - $HOME/.cache/yarn
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 

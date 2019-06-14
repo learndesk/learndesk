@@ -2,6 +2,8 @@ package app.learndesk.server
 
 import app.learndesk.Learndesk
 import app.learndesk.Version
+import app.learndesk.server.routes.Account
+import app.learndesk.server.routes.Coffee
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.json.JsonObject
@@ -35,6 +37,7 @@ object Server {
 
         // Request headers
         router.route().handler {
+            // Debug logs
             log.debug(
                 "Received request {} {} from {}",
                 it.request().method(),
@@ -42,18 +45,17 @@ object Server {
                 it.request().remoteAddress()
             )
 
+            // Headers
             it.response().putHeader("Learndesk-Commit", Version.COMMIT)
             it.response().putHeader("Content-Type", "application/json")
+
+            // @todo: metrics (probably datadog)
             it.next()
         }
 
         // Routes
-        router.get("/coffee").handler {
-            it.response()
-                .setStatusCode(418)
-                .setStatusMessage("I'm a teapot")
-                .end(encodeError(418, "i'm a teapot"))
-        }
+        Coffee.registerRoutes(router)
+        Account.registerRoutes(router)
 
         // 404
         router.route().handler {
@@ -68,6 +70,7 @@ object Server {
             if (it.failed()) {
                 log.error("Failed to start HTTP server!", it.cause())
             } else {
+                started = true
                 log.info("HTTP server started successfully, ready to handle requests")
             }
         }

@@ -19,7 +19,6 @@
 package app.learndesk
 
 import app.learndesk.server.Server
-import de.mxro.metrics.jre.Metrics
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
@@ -35,9 +34,6 @@ object Learndesk {
         private set
     var AUTH_SECRET = ""
         private set
-
-    // Things
-    val metrics = Metrics.create()!!
 
     @JvmStatic
     fun main(args: Array<String>) {

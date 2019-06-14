@@ -44,9 +44,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 
     implementation 'io.lettuce:lettuce-core:5.1.7.RELEASE'
-    implementation 'org.mongodb:mongo-java-driver:3.8.2'
-    implementation 'io.github.cdimascio:java-dotenv:3.1.2'
-    implementation 'org.javadelight:delight-metrics:0.0.6'
+    implementation 'org.mongodb:mongodb-driver-async:3.10.1'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
@@ -60,9 +58,6 @@ task ktlint(type: JavaExec, group: "verification") {
     classpath = configurations.ktlint
     main = "com.pinterest.ktlint.Main"
     args "src/**/*.kt"
-    // to generate report in checkstyle format prepend following args:
-    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-    // see https://github.com/pinterest/ktlint#usage for more
 }
 
 task ktlintFormat(type: JavaExec, group: "formatting") {

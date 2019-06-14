@@ -16,17 +16,34 @@ cache:
 jobs:
   include:
     - stage: tests
-      name: lint
+      name: lint nodejs
+      language: node_js
+      node_js:
+        - "12"
+      before_install: curl -o- -L https://yarnpkg.com/install.sh | bash
+      install: cd emails && yarn
+      script: cd emails && yarn run lint
+
+    - stage: tests
+      name: lint kotlin
       script:
         - chmod +x gradlew
         - ./gradlew ktlint
+
     - stage: tests
       name: unit
       script:
         - chmod +x gradlew
         - echo 'todo'
+
     - stage: build
+      before_install:
+        - nvm install 12
+        - curl -o- -L https://yarnpkg.com/install.sh | bash
       script:
+        - cd emails
+        - yarn run build
+        - cd ..
         - chmod +x gradlew
         - ./gradlew shadowJar
       if: branch = master OR branch = develop

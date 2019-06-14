@@ -1,0 +1,36 @@
+<mjml>
+  <mj-head>
+    <mj-font href="https://fonts.googleapis.com/css?family=Questrial" name="Questrial" />
+    <mj-attributes>
+      <mj-body background-color="#ffffff"/>
+      <mj-text color="#34383b" font-family="Questrial, sans-serif" font-size="22px" line-height="28px" />
+      <mj-button background-color="#f49898" font-family="Questrial, sans-serif" font-size="18px"/>
+      <mj-divider border-color="#cbc7c4" border-width="1px" padding-top="5px" padding-bottom="5px" padding-left="0" padding-right="0" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-include path="./includes/header.mjml" />
+    <mj-section>
+      <mj-column>
+        <mj-text align="center" font-size="32px" line-height="34px" font-weight="bold">
+          Confirm your email address
+        </mj-text>
+        <mj-text>
+          Welcome to Learndesk {{ pseudo }}!
+        </mj-text>
+        <mj-text align="justify">
+          Thanks for registering for an account on Learndesk! Before we get started we just need to
+          confirm it's you. Click below to confirm your email address:
+        </mj-text>
+        <mj-button href="https://learndesk.app/auth/confirm?token={{ token }}" padding-bottom="10px">
+          Confirm my email address
+        </mj-button>
+        <mj-text align="center" font-size="14px" line-height="16px" padding="0">
+          Or copy/paste this link in your browser :<br/>
+          <u>https://learndesk.app/auth/confirm?token={{ token }}</u>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./includes/footer.mjml"/>
+  </mj-body>
+</mjml>

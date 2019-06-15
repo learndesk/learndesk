@@ -21,17 +21,19 @@ package app.learndesk
 import org.apache.commons.mail.HtmlEmail
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.nio.charset.Charset
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Locale
 import java.util.Properties
+import java.util.concurrent.Executors
 
 object Mail {
     private val log = LoggerFactory.getLogger(Mail::class.java) as Logger
     private val solicitedMails = listOf("data_harvest")
     private val locales: Map<Locale, Properties>
+
+    private val scheduler = Executors.newSingleThreadExecutor()!!
 
     init {
         // LOCALES
@@ -57,7 +59,9 @@ object Mail {
             email.setHtmlMsg(mail.second)
             email.setSmtpPort(Learndesk.properties.getProperty("smtp.port").toInt())
             email.setFrom("noreply@learndesk.app")
-            email.send()
+            scheduler.submit {
+                email.send()
+            }
         } catch (e: Throwable) {
             log.error("Failed to send email!", e)
         }

@@ -17,16 +17,7 @@ cache:
 jobs:
   include:
     - stage: tests
-      name: lint nodejs
-      language: node_js
-      node_js:
-        - "12"
-      before_install: curl -o- -L https://yarnpkg.com/install.sh | bash
-      install: cd email && yarn
-      script: yarn run lint
-
-    - stage: tests
-      name: lint kotlin
+      name: lint
       script:
         - chmod +x gradlew
         - ./gradlew ktlint

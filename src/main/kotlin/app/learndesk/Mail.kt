@@ -31,20 +31,21 @@ import java.util.concurrent.Executors
 object Mail {
     private val log = LoggerFactory.getLogger(Mail::class.java) as Logger
     private val solicitedMails = listOf("data_harvest")
-    private val locales: Map<Locale, Properties>
+    private val locales = mutableMapOf<Locale, Properties>()
 
     private val scheduler = Executors.newSingleThreadExecutor()!!
 
     init {
         // LOCALES
-        val enLocales = {}.javaClass.getResource("/email/strings/en.properties").openStream()
-        val en = Properties()
-        en.load(enLocales)
-        enLocales.close()
-
-        locales = mapOf(
-            Pair(Locale.ENGLISH, en)
-        )
+        mapOf(
+            Pair(Locale.ENGLISH, "en")
+        ).forEach { (locale, id) ->
+            val strings = {}.javaClass.getResource("/email/strings/$id.properties").openStream()
+            val props = Properties()
+            props.load(strings)
+            strings.close()
+            locales[locale] = props
+        }
     }
 
     fun send(to: String, emailId: String, locale: Locale, variables: Map<String, Any> = emptyMap()) {
@@ -55,7 +56,7 @@ object Mail {
             email.subject = mail.first
 
             email.addTo(to)
-            email.setCharset("UTF-8")
+            email.setCharset("UTF-32")
             email.setHtmlMsg(mail.second)
             email.setSmtpPort(Learndesk.properties.getProperty("smtp.port").toInt())
             email.setFrom("noreply@learndesk.app")
@@ -68,7 +69,7 @@ object Mail {
     }
 
     private fun bakeMail(email: String, locale: Locale, variables: Map<String, Any>): Pair<String, String> {
-        val locales = locales[locale] ?: error("wtf dude")
+        val locales = locales[locale] ?: locales[Locale.ENGLISH]!!
         var subject = ""
         var html = {}.javaClass.getResource("/email/html/$email.html").readText()
         html = html.replace("\\{([a-z_.]+)}".toRegex()) {

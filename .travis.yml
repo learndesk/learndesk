@@ -34,6 +34,7 @@ jobs:
         - curl -o- -L https://yarnpkg.com/install.sh | bash
       script:
         - cd email
+        - yarn
         - yarn run build
         - cd ..
         - chmod +x gradlew

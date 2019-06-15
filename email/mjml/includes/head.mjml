@@ -1,0 +1,9 @@
+<mj-head>
+  <mj-font href="https://fonts.googleapis.com/css?family=Questrial" name="Questrial" />
+  <mj-attributes>
+    <mj-body background-color="#ffffff" />
+    <mj-text color="#323232" font-family="Questrial, sans-serif" font-size="22px" line-height="28px" />
+    <mj-button background-color="#f49898" font-family="Questrial, sans-serif" font-size="18px" />
+    <mj-divider border-color="#cbc7c4" border-width="1px" padding-top="5px" padding-bottom="5px" padding-left="0" padding-right="0" />
+  </mj-attributes>
+</mj-head>

@@ -22,7 +22,7 @@ jobs:
       node_js:
         - "12"
       before_install: curl -o- -L https://yarnpkg.com/install.sh | bash
-      install: cd emails && yarn
+      install: cd email && yarn
       script: yarn run lint
 
     - stage: tests
@@ -42,7 +42,7 @@ jobs:
         - nvm install 12
         - curl -o- -L https://yarnpkg.com/install.sh | bash
       script:
-        - cd emails
+        - cd email
         - yarn run build
         - cd ..
         - chmod +x gradlew

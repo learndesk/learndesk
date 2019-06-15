@@ -1,0 +1,7 @@
+<!-- Header -->
+<mj-section padding-bottom="0">
+  <mj-column>
+    <mj-image src="https://cdn.bowser65.xyz/learndesk/logo.png" width="400px" padding="0" align="center" href="https://bowser65.tk/" />
+    <mj-divider border-color="#f49898" border-width="4px" padding-top="0"/>
+  </mj-column>
+</mj-section>

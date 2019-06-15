@@ -1,0 +1,35 @@
+<mjml>
+  <mj-include path="./includes/head.mjml" />
+  <mj-body>
+    <mj-include path="./includes/header.mjml" />
+    <mj-section>
+      <mj-column>
+        <mj-text align="center" font-size="32px" line-height="34px" font-weight="bold">
+          {titles.harvest}
+        </mj-text>
+        <mj-text>
+          {contents.hi}
+        </mj-text>
+        <mj-text align="justify">
+          {harvest.intro}
+        </mj-text>
+        <mj-text align="justify">
+          {harvest.tuto}
+        </mj-text>
+        <mj-text align="justify">
+          {harvest.questions}
+        </mj-text>
+        <mj-button href="{{ download_link }}" padding-bottom="10px">
+          {harvest.download}
+        </mj-button>
+        <mj-text font-size="18px" line-height="20px" padding-bottom="0">
+          • {harvest.valid}
+        </mj-text>
+        <mj-text font-size="18px" line-height="20px" padding-bottom="0">
+          • {harvest.warning}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./includes/footer.mjml" />
+  </mj-body>
+</mjml>

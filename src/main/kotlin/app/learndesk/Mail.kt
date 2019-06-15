@@ -18,6 +18,10 @@
 
 package app.learndesk
 
+import org.apache.commons.mail.HtmlEmail
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import java.nio.charset.Charset
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -25,10 +29,12 @@ import java.util.Locale
 import java.util.Properties
 
 object Mail {
+    private val log = LoggerFactory.getLogger(Mail::class.java) as Logger
     private val solicitedMails = listOf("data_harvest")
     private val locales: Map<Locale, Properties>
 
     init {
+        // LOCALES
         val enLocales = {}.javaClass.getResource("/email/strings/en.properties").openStream()
         val en = Properties()
         en.load(enLocales)
@@ -39,20 +45,38 @@ object Mail {
         )
     }
 
-    fun send(to: String, email: String, locale: Locale, variables: Map<String, Any> = emptyMap()) {
-        val html = bakeMail(email, locale, variables)
-        println(html)
+    fun send(to: String, emailId: String, locale: Locale, variables: Map<String, Any> = emptyMap()) {
+        val mail = bakeMail(emailId, locale, variables)
+        try {
+            val email = HtmlEmail()
+            email.hostName = Learndesk.properties.getProperty("smtp.host")
+            email.subject = mail.first
+
+            email.addTo(to)
+            email.setCharset("UTF-8")
+            email.setHtmlMsg(mail.second)
+            email.setSmtpPort(Learndesk.properties.getProperty("smtp.port").toInt())
+            email.setFrom("noreply@learndesk.app")
+            email.send()
+        } catch (e: Throwable) {
+            log.error("Failed to send email!", e)
+        }
     }
 
-    private fun bakeMail(email: String, locale: Locale, variables: Map<String, Any>): String {
+    private fun bakeMail(email: String, locale: Locale, variables: Map<String, Any>): Pair<String, String> {
         val locales = locales[locale] ?: error("wtf dude")
-        val html = {}.javaClass.getResource("/email/html/$email.html").readText()
-        return html.replace("\\{([a-z_.]+)}".toRegex()) {
+        var subject = ""
+        var html = {}.javaClass.getResource("/email/html/$email.html").readText()
+        html = html.replace("\\{([a-z_.]+)}".toRegex()) {
             var localeId = it.groupValues[1]
             if (localeId == "footer.reason") {
                 localeId = "$localeId.${if (solicitedMails.contains(email)) '2' else '1'}"
             }
-            locales[localeId].toString()
+            val localized = locales.getProperty(localeId)
+            if (localeId.startsWith("title.")) {
+                subject = localized
+            }
+            localized
         }.replace("\\{\\{ ([a-z_]+) }}".toRegex()) {
             val replacement = variables[it.groupValues[1]] ?: ""
             if (replacement is LocalDateTime) {
@@ -62,5 +86,6 @@ object Mail {
                 replacement.toString()
             }
         }
+        return Pair(subject, html)
     }
 }

@@ -84,7 +84,7 @@ object Server {
         }
 
         // Listen
-        httpServer.requestHandler(router).listen(Learndesk.PORT) {
+        httpServer.requestHandler(router).listen(Learndesk.properties.getProperty("port", "8000").toInt()) {
             if (it.failed()) {
                 log.error("Failed to start HTTP server!", it.cause())
             } else {

@@ -11,6 +11,7 @@ config.properties
 
 # My stuff
 *.nogit.*
+*.log
 
 # Eclipse
 /.project
@@ -18,3 +19,7 @@ config.properties
 
 # RSA private keys
 .travisci/private_rsa_keys.tar.gz
+
+# Email related
+email/node_modules
+src/main/resources/email/html

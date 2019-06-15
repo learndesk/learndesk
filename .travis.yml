@@ -10,6 +10,7 @@ before_cache:
 
 cache:
   directories:
+    - $HOME/.cache/yarn
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
 
@@ -20,13 +21,22 @@ jobs:
       script:
         - chmod +x gradlew
         - ./gradlew ktlint
+
     - stage: tests
       name: unit
       script:
         - chmod +x gradlew
         - echo 'todo'
+
     - stage: build
+      before_install:
+        - nvm install 12
+        - curl -o- -L https://yarnpkg.com/install.sh | bash
       script:
+        - cd email
+        - yarn
+        - yarn run build
+        - cd ..
         - chmod +x gradlew
         - ./gradlew shadowJar
       if: branch = master OR branch = develop

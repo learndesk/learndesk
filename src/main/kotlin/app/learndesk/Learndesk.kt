@@ -22,7 +22,6 @@ import app.learndesk.server.Server
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
-import java.lang.IllegalStateException
 import java.util.*
 
 object Learndesk {
@@ -30,10 +29,7 @@ object Learndesk {
     val startTime = System.currentTimeMillis()
 
     // Config
-    var PORT = 0
-        private set
-    var AUTH_SECRET = ""
-        private set
+    val properties: Properties = Properties()
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -57,11 +53,7 @@ object Learndesk {
 
     private fun loadProperties() {
         val inputStream = File("./config.properties").inputStream()
-        val properties = Properties()
         properties.load(inputStream)
         inputStream.close()
-        PORT = properties.getProperty("port", "8000").toInt()
-        AUTH_SECRET = properties.getProperty("auth.secret")
-            ?: throw IllegalStateException("auth.secret property can't be null!")
     }
 }

@@ -7,7 +7,7 @@
   "license": "AGPL-3.0",
   "private": true,
   "scripts": {
-    "build": "babel-node builder.js"
+    "build": "node builder.js"
   },
   "dependencies": {
     "mjml": "^4.3.1",

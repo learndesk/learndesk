@@ -26,7 +26,7 @@ jobs:
       name: unit
       script:
         - chmod +x gradlew
-        - echo 'todo'
+        - ./gradlew test
 
     - stage: build
       before_install:

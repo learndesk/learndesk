@@ -21,17 +21,22 @@ package app.learndesk
 import org.apache.commons.mail.HtmlEmail
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.time.LocalDateTime
+import java.text.DateFormat
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import java.time.format.TextStyle
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import java.util.Properties
+import java.util.TimeZone
 import java.util.concurrent.Executors
 
 object Mail {
     private val log = LoggerFactory.getLogger(Mail::class.java) as Logger
     private val solicitedMails = listOf("data_harvest")
-    private val locales = mutableMapOf<Locale, Properties>()
+    private val locales = mutableMapOf<Locale, Pair<Properties, DateFormat>>()
 
     private val scheduler = Executors.newSingleThreadExecutor()!!
 
@@ -44,7 +49,9 @@ object Mail {
             val props = Properties()
             props.load(strings)
             strings.close()
-            locales[locale] = props
+            val formatter = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.LONG, locale)
+            formatter.timeZone = TimeZone.getTimeZone("Europe/Paris")
+            locales[locale] = Pair(props, formatter)
         }
     }
 
@@ -72,23 +79,22 @@ object Mail {
         val locales = locales[locale] ?: locales[Locale.ENGLISH]!!
         var subject = ""
         var html = {}.javaClass.getResource("/email/html/$email.html").readText()
-        html = html.replace("\\{([a-z_.]+)}".toRegex()) {
+        html = html.replace("\\{([a-z0-9_.]+)}".toRegex()) {
             var localeId = it.groupValues[1]
             if (localeId == "footer.reason") {
                 localeId = "$localeId.${if (solicitedMails.contains(email)) '2' else '1'}"
             }
-            val localized = locales.getProperty(localeId)
+            val localized = locales.first.getProperty(localeId)
             if (localeId.startsWith("title.")) {
                 subject = localized
             }
             localized
-        }.replace("\\{\\{ ([a-z_]+) }}".toRegex()) {
-            val replacement = variables[it.groupValues[1]] ?: ""
-            if (replacement is LocalDateTime) {
-                val formatter = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).localizedBy(locale)
-                replacement.format(formatter)
-            } else {
-                replacement.toString()
+        }.replace("\\{\\{ ([a-z0-9_]+) }}".toRegex()) {
+            when (val replacement = variables[it.groupValues[1]] ?: "") {
+                is Date -> {
+                    locales.second.format(replacement).replace(", (\\d{1,2}:\\d{1,2}):\\d{1,2}".toRegex(), " at $1")
+                }
+                else -> replacement.toString()
             }
         }
         return Pair(subject, html)

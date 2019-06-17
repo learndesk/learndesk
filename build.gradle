@@ -44,7 +44,7 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 
     implementation 'io.lettuce:lettuce-core:5.1.7.RELEASE'
-    implementation 'org.mongodb:mongodb-driver-async:3.10.1'
+    implementation 'org.mongodb:mongodb-driver-async:3.10.2'
     implementation 'org.apache.commons:commons-email:1.5'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

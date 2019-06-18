@@ -40,7 +40,7 @@ dependencies {
 
     implementation 'io.vertx:vertx-web:3.7.1'
 
-    implementation 'io.sentry:sentry-logback:1.7.22'
+    implementation 'io.sentry:sentry-logback:1.7.23'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 
     implementation 'io.lettuce:lettuce-core:5.1.7.RELEASE'

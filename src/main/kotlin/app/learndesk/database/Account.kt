@@ -33,7 +33,7 @@ object Account {
                     .append("email", email.toString())
                     .append("email_sanitized", email.sanitized)
                     .append("password", hashedPassword)
-                    .append("flags", if(isFirstDocument()) 1 else 0)
+                    .append("flags", if (isFirstDocument()) 1 else 0)
             )
             future.complete(Database.accounts.find(BasicDBObject("_id", id)).first())
         }

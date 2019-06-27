@@ -6,10 +6,10 @@
       "script": "/usr/bin/java",
       "args": [
         "-jar",
-        "backend-0.1.0-all.jar"
+        "learndesk.jar"
       ],
       "watch": [
-        "backend-0.1.0-all.jar"
+        "learndesk.jar"
       ],
       "node_args": [],
       "log_date_format": "YYYY-MM-DD HH:mm Z",

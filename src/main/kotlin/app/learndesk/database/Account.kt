@@ -41,14 +41,20 @@ object Account {
         return AccountEntity.build(document)
     }
 
-    // @todo
     suspend fun isUsernameTaken(username: String): Boolean {
-        return false
+        val future = CompletableFuture<Boolean>()
+        executor.submit {
+            future.complete(Database.accounts.find(BasicDBObject("username", username)).first() != null)
+        }
+        return future.await()
     }
 
-    // @todo
-    suspend fun isEmailTaken(email: String): Boolean {
-        return false
+    suspend fun isEmailTaken(email: Email): Boolean {
+        val future = CompletableFuture<Boolean>()
+        executor.submit {
+            future.complete(Database.accounts.find(BasicDBObject("email_sanitized", email.sanitized)).first() != null)
+        }
+        return future.await()
     }
 
     private fun isFirstDocument(): Boolean {

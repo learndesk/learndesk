@@ -40,7 +40,7 @@ object Auth : AbstractRoute() {
 
     private suspend fun handleRegister(ctx: RoutingContext) {
         if (Learndesk.properties.getProperty("registering") == "false") {
-            return ctx.replyError(403, "registerations disabled")
+            return ctx.replyError(403, "registrations disabled")
         }
 
         val body = ctx.bodyAsJson ?: return ctx.replyError(400, "bad or missing payload")
@@ -76,10 +76,10 @@ object Auth : AbstractRoute() {
             password as String
 
             if (!Mailcheck.isValidEmail(email)) response.put("email", "format")
-            else if (Account.isEmailTaken(email)) response.put("email", "taken")
+            else if (Account.isEmailTaken(Mailcheck.buildEmail(email))) response.put("email", "taken")
 
             if (!USERNAME_REGEX.matches(username)) response.put("username", "format")
-            else if (Account.isUsernameTaken(email)) response.put("username", "taken")
+            else if (Account.isUsernameTaken(username)) response.put("username", "taken")
 
             if (password.length > 128 || password.length < 6) response.put("password", "length")
         }

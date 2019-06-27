@@ -3,7 +3,7 @@ package app.learndesk.misc
 import app.learndesk.Learndesk
 import java.util.concurrent.atomic.AtomicLong
 
-class Snowflake (
+class Snowflake(
     private val workerId: Long,
     private val resourceId: Long
 ) {

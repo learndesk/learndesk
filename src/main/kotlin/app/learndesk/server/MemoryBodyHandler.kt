@@ -22,7 +22,7 @@ class MemoryBodyHandler : Handler<RoutingContext> {
         }
     }
 
-    private class ReadHandler (private val context: RoutingContext, private val maxSize: Int) : Handler<Buffer> {
+    private class ReadHandler(private val context: RoutingContext, private val maxSize: Int) : Handler<Buffer> {
         private val buffer = Buffer.buffer()
 
         override fun handle(data: Buffer) {

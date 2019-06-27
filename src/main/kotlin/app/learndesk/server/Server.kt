@@ -20,11 +20,11 @@ package app.learndesk.server
 
 import app.learndesk.Learndesk
 import app.learndesk.Version
+import app.learndesk.misc.replyError
 import app.learndesk.server.routes.Account
+import app.learndesk.server.routes.Auth
 import app.learndesk.server.routes.Coffee
 import io.vertx.core.Vertx
-import io.vertx.core.buffer.Buffer
-import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.Router
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -46,11 +46,7 @@ object Server {
         // Error handler
         router.route().failureHandler {
             log.error("Error in HTTP handler", it.failure())
-            it.response()
-                .setStatusCode(500)
-                .setStatusMessage("Internal Server Error")
-                .putHeader("Content-Type", "application/json")
-                .end(encodeError(500, "an internal server error occurred"))
+            it.replyError(500, "an internal server error occurred")
         }
 
         // Request headers
@@ -64,8 +60,8 @@ object Server {
             )
 
             // Headers
-            it.response().putHeader("Learndesk-Commit", Version.COMMIT)
-            it.response().putHeader("Content-Type", "application/json")
+            it.response().putHeader("learndesk-commit", Version.COMMIT)
+            it.response().putHeader("content-type", "application/json")
 
             // @todo: metrics (probably datadog)
             it.next()
@@ -73,14 +69,15 @@ object Server {
 
         // Routes
         Coffee.registerRoutes(router)
+        Auth.registerRoutes(router)
         Account.registerRoutes(router)
+
+        // Handle OPTIONS to ensure CORS requests don't fail
+        router.options().handler { it.response().end() }
 
         // 404
         router.route().handler {
-            it.response()
-                .setStatusCode(404)
-                .setStatusMessage("Not Found")
-                .end(encodeError(404, "no endpoint matching your query found"))
+            it.replyError(404, "no endpoint matching your query found")
         }
 
         // Listen
@@ -92,12 +89,5 @@ object Server {
                 log.info("HTTP server started successfully, ready to handle requests")
             }
         }
-    }
-
-    fun encodeError(status: Int, error: String): Buffer {
-        return JsonObject()
-            .put("status", status)
-            .put("error", error)
-            .toBuffer()
     }
 }

@@ -18,16 +18,13 @@
 
 package app.learndesk.server.routes
 
-import app.learndesk.server.Server
+import app.learndesk.misc.replyError
 import io.vertx.ext.web.Router
 
-object Coffee {
-    fun registerRoutes(router: Router) {
+object Coffee : AbstractRoute() {
+    override fun registerRoutes(router: Router) {
         router.get("/coffee").handler {
-            it.response()
-                .setStatusCode(418)
-                .setStatusMessage("I'm a teapot")
-                .end(Server.encodeError(418, "i'm a teapot"))
+            it.replyError(418, "i'm a teapot")
         }
     }
 }

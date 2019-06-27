@@ -94,7 +94,8 @@ Identifier can be:
 
 ### User Flags
 
-User flags are internally used to save attributes about the users, like permissions or badges.
+User flags are internally used to save attributes about the users, like permissions, badges or internal "features"
+enabled on an account
 
 | value | description |
 |----|----|
@@ -103,6 +104,7 @@ User flags are internally used to save attributes about the users, like permissi
 | 1 << 1 | Teacher |
 | 1 << 2 | Contributor |
 | 1 << 3 | Bug Hunter |
+| 1 << 4 | MFA enabled |
 
 ### Avatar Data
 

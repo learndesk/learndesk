@@ -20,9 +20,12 @@ package app.learndesk.server.routes
 
 import io.vertx.ext.web.Router
 
-object Account : AbstractRoute() {
+object Auth : AbstractRoute() {
     override fun registerRoutes(router: Router) {
-        // register routes
-        // router.method("path").handler(this::handler)
+        // router.post("/auth/register").handler(this::handler)
+        // router.post("/auth/login").handler(this::handler)
+        // router.post("/auth/mfa").handler(this::handler)
+        // router.post("/auth/reset").handler(this::handler)
+        // router.post("/auth/reset/execute").handler(this::handler)
     }
 }

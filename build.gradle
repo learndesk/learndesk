@@ -40,6 +40,8 @@ configurations {
 dependencies {
     ktlint "com.pinterest:ktlint:0.33.0"
 
+    implementation 'com.github.learndesk:mailcheck:0.1.0'
+
     implementation 'io.sentry:sentry-logback:1.7.23'
     implementation 'ch.qos.logback:logback-classic:1.2.3'
 
@@ -48,6 +50,7 @@ dependencies {
     // (yes i like private jokes :^))
     implementation 'org.mongodb:mongodb-driver-sync:3.10.2'
 
+    implementation 'de.mkammerer:argon2-jvm:2.5'
     implementation 'io.lettuce:lettuce-core:5.1.7.RELEASE'
     implementation 'org.apache.commons:commons-email:1.5'
 

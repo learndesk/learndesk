@@ -67,6 +67,8 @@ object Server {
             it.next()
         }
 
+        router.route().handler(MemoryBodyHandler())
+
         // Routes
         Coffee.registerRoutes(router)
         Auth.registerRoutes(router)

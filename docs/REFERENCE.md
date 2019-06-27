@@ -104,7 +104,6 @@ enabled on an account
 | 1 << 1 | Teacher |
 | 1 << 2 | Contributor |
 | 1 << 3 | Bug Hunter |
-| 1 << 4 | MFA enabled |
 
 ### Avatar Data
 

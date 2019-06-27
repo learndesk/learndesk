@@ -25,6 +25,7 @@ import java.io.File
 import java.util.*
 
 object Learndesk {
+    const val LEARNDESK_EPOCH = 1546300800000L
     val log = LoggerFactory.getLogger(Learndesk::class.java) as Logger
     val startTime = System.currentTimeMillis()
 

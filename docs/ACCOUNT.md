@@ -93,6 +93,7 @@ Response format:
 | birthday | ?ISO8601 timestamp | The user's birthday date |
 | avatar | ?string | the avatar's ID |
 | verified | boolean | if the email is verified |
+| locale | string | the user's chosen locale |
 | flag | number | the [flags](REFERENCE.md#user-flags) of this user |
 | mfa | boolean | whether the MFA is set or not |
 
@@ -113,7 +114,7 @@ Response format:
 | lastname | ?string | the lastname |
 | birthday | ?ISO8601 timestamp | the user's birthday date |
 | avatar | ?string | the avatar's hash |
-| locale | ?string | the user's chosen locale |
+| locale | string | the user's chosen locale |
 | flag | number | the [flags](REFERENCE.md#user-flags) of this user |
 
 

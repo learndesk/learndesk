@@ -12,7 +12,7 @@ class Account(
     private val avatar: String?,
     private val verified: Boolean,
     private val locale: String,
-    private val flags: Long,
+    private val flags: Int,
     private val mfa: Boolean
 ) : IEntity {
     override fun toJson() = toJson(fname = true, lname = true, bday = true, self = true)
@@ -46,7 +46,7 @@ class Account(
                 document.getString("avatar"),
                 document.getBoolean("verified") ?: false,
                 document.getString("locale") ?: "en", // @todo: make this better
-                document.getLong("flags") ?: 0,
+                document.getInteger("flags") ?: 0,
                 document.getBoolean("mfa") ?: false
             )
         }

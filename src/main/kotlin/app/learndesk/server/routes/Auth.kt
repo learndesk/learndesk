@@ -18,6 +18,7 @@
 
 package app.learndesk.server.routes
 
+import app.learndesk.Learndesk
 import app.learndesk.database.Account
 import app.learndesk.mailcheck.Mailcheck
 import app.learndesk.misc.end
@@ -38,6 +39,10 @@ object Auth : AbstractRoute() {
     }
 
     private suspend fun handleRegister(ctx: RoutingContext) {
+        if (Learndesk.properties.getProperty("registering") == "false") {
+            return ctx.replyError(403, "registerations disabled")
+        }
+
         val body = ctx.bodyAsJson ?: return ctx.replyError(400, "bad or missing payload")
         val errors = validateAuth(body)
         if (!errors.isEmpty) {

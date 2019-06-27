@@ -12,6 +12,8 @@ import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 
 object Account {
+    private var haveDocuments = Database.accounts.find().first() != null
+
     private const val ARGON_ITERATION = 3
     private const val ARGON_MEMORY = 128000
     private const val ARGON_PARALLELISM = 4
@@ -31,6 +33,7 @@ object Account {
                     .append("email", email.toString())
                     .append("email_sanitized", email.sanitized)
                     .append("password", hashedPassword)
+                    .append("flags", if(isFirstDocument()) 1 else 0)
             )
             future.complete(Database.accounts.find(BasicDBObject("_id", id)).first())
         }
@@ -46,5 +49,11 @@ object Account {
     // @todo
     suspend fun isEmailTaken(email: String): Boolean {
         return false
+    }
+
+    private fun isFirstDocument(): Boolean {
+        val res = !haveDocuments
+        haveDocuments = true
+        return res
     }
 }

@@ -86,13 +86,6 @@ object Mail {
         }
     }
 
-    /**
-     * Formats an email
-     *
-     * @param email Filename of the email, see /email/mjml
-     * @param locale Locale the mail should be formatted in
-     * @param variables Variables that'll get injected into the mail
-     */
     private fun bakeMail(email: String, locale: Locale, variables: Map<String, Any>): Pair<String, String> {
         val locales = locales[locale] ?: locales[Locale.ENGLISH] ?: error("you live in another dimension.")
         var subject = ""

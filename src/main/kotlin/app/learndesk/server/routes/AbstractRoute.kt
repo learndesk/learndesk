@@ -73,5 +73,10 @@ abstract class AbstractRoute : CoroutineScope {
     //     }
     // }
 
+    /**
+     * Registers all HTTP routes it handles
+     *
+     * @param router The router
+     */
     abstract fun registerRoutes(router: Router)
 }

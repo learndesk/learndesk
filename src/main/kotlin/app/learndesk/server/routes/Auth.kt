@@ -86,6 +86,9 @@ object Auth : AbstractRoute() {
 
         if (response.isEmpty) {
             // Cast shit
+            // Those might not be considered as "safe", but we reject them if they are
+            // null or not a string before. While it's hard for automated tools to detect it,
+            // it's 100% safe to cast them.
             email as String
             username as String
             password as String

@@ -1,5 +1,5 @@
 exclude_paths:
-  - 'src/tests/**'
+  - 'src/tests/**/*'
   - 'docs/**'
   - 'email/**'
   - '.travisci/**'

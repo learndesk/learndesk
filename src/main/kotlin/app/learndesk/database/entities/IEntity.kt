@@ -20,6 +20,16 @@ package app.learndesk.database.entities
 
 import io.vertx.core.json.JsonObject
 
+/**
+ * Represents any database entity
+ *
+ * @author Bowser65
+ */
 interface IEntity {
+    /**
+     * Serializes the entity to JSON that'll be sent over HTTP
+     *
+     * @return The serialized JSON
+     */
     fun toJson(): JsonObject
 }

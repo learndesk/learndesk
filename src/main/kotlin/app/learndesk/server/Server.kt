@@ -37,7 +37,7 @@ import java.util.concurrent.CompletableFuture
  * @author Bowser65
  */
 object Server {
-    private val log = LoggerFactory.getLogger(Server::class.java) as Logger
+    private val log: Logger = LoggerFactory.getLogger(Server::class.java)
     private var started = false
 
     private val vertx = Vertx.vertx()

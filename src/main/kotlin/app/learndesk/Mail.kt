@@ -34,7 +34,7 @@ import java.util.concurrent.Executors
  * @author Bowser65
  */
 object Mail {
-    private val log = LoggerFactory.getLogger(Mail::class.java) as Logger
+    private val log: Logger = LoggerFactory.getLogger(Mail::class.java)
     private val solicitedMails = listOf("data_harvest")
     private val locales = mutableMapOf<Locale, Pair<Properties, DateFormat>>()
 

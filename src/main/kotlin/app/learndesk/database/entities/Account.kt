@@ -21,6 +21,11 @@ package app.learndesk.database.entities
 import io.vertx.core.json.JsonObject
 import org.bson.Document
 
+/**
+ * Represents an user account
+ *
+ * @author Bowser65
+ */
 class Account(
     private val id: Long,
     private val username: String,
@@ -35,6 +40,15 @@ class Account(
 ) : IEntity {
     override fun toJson() = toJson(fname = true, lname = true, bday = true, self = true)
 
+    /**
+     * Serializes the entity to JSON with optional fields
+     *
+     * @param fname If the first name is publicly available
+     * @param lname If the last name is publicly available
+     * @param bday If the birthday date is publicly available
+     * @param self If the private data should be included in the final json
+     * @return The serialized JSON
+     */
     fun toJson(fname: Boolean, lname: Boolean, bday: Boolean, self: Boolean): JsonObject {
         val json = JsonObject()
             .put("id", id.toString())
@@ -54,6 +68,12 @@ class Account(
     }
 
     companion object {
+        /**
+         * Builds an account from a MongoDB document. Document can be partial
+         *
+         * @param document The document
+         * @return The built account
+         */
         fun build(document: Document): Account {
             return Account(
                 document.getLong("_id"),

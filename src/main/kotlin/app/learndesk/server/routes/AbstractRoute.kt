@@ -28,15 +28,25 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
+/**
+ * Represents a route
+ *
+ * @author Bowser65
+ */
 abstract class AbstractRoute : CoroutineScope {
     override val coroutineContext: CoroutineContext = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
+    /**
+     * Allows using a suspend handler
+     *
+     * @param fn The handler
+     */
     fun Route.coroutineHandler(fn: suspend (RoutingContext) -> Unit) {
         handler { ctx ->
             launch(ctx.vertx().dispatcher()) {
                 try {
                     fn(ctx)
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     ctx.fail(e)
                 }
             }

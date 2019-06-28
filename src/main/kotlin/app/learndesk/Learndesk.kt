@@ -38,11 +38,21 @@ object Learndesk {
     // Config
     val properties: Properties = Properties()
 
+    /**
+     * Application entry point
+     *
+     * @param args Arguments
+     */
     @JvmStatic
     fun main(args: Array<String>) {
         startup()
     }
 
+    /**
+     * Starts up Learndesk
+     *
+     * @return A future that'll complete once application is ready
+     */
     fun startup(): CompletableFuture<Void> {
         val future = CompletableFuture<Void>()
         log.info("~~~ Learndesk REST API ~~~")

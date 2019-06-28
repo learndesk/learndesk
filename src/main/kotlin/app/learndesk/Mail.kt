@@ -28,6 +28,11 @@ import java.util.Properties
 import java.util.TimeZone
 import java.util.concurrent.Executors
 
+/**
+ * Mail sending utility
+ *
+ * @author Bowser65
+ */
 object Mail {
     private val log = LoggerFactory.getLogger(Mail::class.java) as Logger
     private val solicitedMails = listOf("data_harvest")
@@ -50,6 +55,14 @@ object Mail {
         }
     }
 
+    /**
+     * Formats and sends an email to someone
+     *
+     * @param to Email address of the recipient
+     * @param emailId Filename of the email, see /email/mjml
+     * @param locale Locale the mail should be formatted in
+     * @param variables Variables that'll get injected into the mail
+     */
     fun send(to: String, emailId: String, locale: Locale, variables: Map<String, Any> = emptyMap()) {
         if (Learndesk.properties.getProperty("smtp.host") == null) {
             log.warn("Attempted to send an email, but SMTP is not configured! Email won't be sent.")
@@ -73,8 +86,15 @@ object Mail {
         }
     }
 
+    /**
+     * Formats an email
+     *
+     * @param email Filename of the email, see /email/mjml
+     * @param locale Locale the mail should be formatted in
+     * @param variables Variables that'll get injected into the mail
+     */
     private fun bakeMail(email: String, locale: Locale, variables: Map<String, Any>): Pair<String, String> {
-        val locales = locales[locale] ?: locales[Locale.ENGLISH]!!
+        val locales = locales[locale] ?: locales[Locale.ENGLISH] ?: error("you live in another dimension.")
         var subject = ""
         var html = {}.javaClass.getResource("/email/html/$email.html").readText()
         html = html.replace("\\{([a-z0-9_.]+)}".toRegex()) {

@@ -25,9 +25,14 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
+/**
+ * Main class for Learndesk
+ *
+ * @author Bowser65
+ */
 object Learndesk {
     const val LEARNDESK_EPOCH = 1546300800000L
-    val log = LoggerFactory.getLogger(Learndesk::class.java) as Logger
+    val log: Logger = LoggerFactory.getLogger(Learndesk::class.java)
     val startTime = System.currentTimeMillis()
 
     // Config

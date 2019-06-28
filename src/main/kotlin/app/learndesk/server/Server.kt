@@ -31,6 +31,11 @@ import org.slf4j.LoggerFactory
 import java.lang.IllegalStateException
 import java.util.concurrent.CompletableFuture
 
+/**
+ * HTTP Server of the backend baked with vert.x
+ *
+ * @author Bowser65
+ */
 object Server {
     private val log = LoggerFactory.getLogger(Server::class.java) as Logger
     private var started = false
@@ -39,6 +44,12 @@ object Server {
     private val router = Router.router(vertx)
     private val httpServer = vertx.createHttpServer()
 
+    /**
+     * Starts up the HTTP server
+     *
+     * @return A future that will complete once the server is listening
+     * @throws IllegalStateException If the server is already up
+     */
     fun startup(): CompletableFuture<Void> {
         val future = CompletableFuture<Void>()
         if (started) {

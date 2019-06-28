@@ -18,6 +18,11 @@
 
 package app.learndesk;
 
+/**
+ * Learndesk version informations
+ *
+ * @author Bowser65
+ */
 @SuppressWarnings({"ConstantConditions", "WeakerAccess", "unused"})
 public class Version {
     public static final String VERSION_MAJOR;

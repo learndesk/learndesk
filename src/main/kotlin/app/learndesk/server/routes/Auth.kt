@@ -29,6 +29,11 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import java.util.Locale
 
+/**
+ * Handler for auth-related routes
+ *
+ * @author Bowser65
+ */
 object Auth : AbstractRoute() {
     private val USERNAME_REGEX = "^[\\w_-]+$".toRegex()
 
@@ -46,7 +51,7 @@ object Auth : AbstractRoute() {
         }
 
         val body = ctx.bodyAsJson ?: return ctx.replyError(400, "bad or missing payload")
-        val errors = validateAuth(body)
+        val errors = validateRegister(body)
         if (!errors.isEmpty) {
             return ctx.replyError(400, errors)
         }
@@ -69,7 +74,7 @@ object Auth : AbstractRoute() {
     // +------------+
     // | Validators |
     // +------------+
-    private suspend fun validateAuth(data: JsonObject): JsonObject {
+    private suspend fun validateRegister(data: JsonObject): JsonObject {
         val email = data.getValue("email")
         val username = data.getValue("username")
         val password = data.getValue("password")

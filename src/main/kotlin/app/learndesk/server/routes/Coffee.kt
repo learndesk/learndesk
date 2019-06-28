@@ -21,6 +21,11 @@ package app.learndesk.server.routes
 import app.learndesk.misc.replyError
 import io.vertx.ext.web.Router
 
+/**
+ * The job of developer is to transform coffee into code. But unfortunately this server is a teapot.
+ *
+ * @author Bowser65
+ */
 object Coffee : AbstractRoute() {
     override fun registerRoutes(router: Router) {
         router.get("/coffee").handler {

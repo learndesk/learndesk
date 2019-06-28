@@ -20,6 +20,11 @@ package app.learndesk.server.routes
 
 import io.vertx.ext.web.Router
 
+/**
+ * Handles account-related routes
+ *
+ * @author Bowser65
+ */
 object Account : AbstractRoute() {
     override fun registerRoutes(router: Router) {
         // register routes

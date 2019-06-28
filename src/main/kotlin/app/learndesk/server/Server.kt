@@ -29,6 +29,7 @@ import io.vertx.ext.web.Router
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.IllegalStateException
+import java.util.concurrent.CompletableFuture
 
 object Server {
     private val log = LoggerFactory.getLogger(Server::class.java) as Logger
@@ -38,7 +39,8 @@ object Server {
     private val router = Router.router(vertx)
     private val httpServer = vertx.createHttpServer()
 
-    fun startup() {
+    fun startup(): CompletableFuture<Void> {
+        val future = CompletableFuture<Void>()
         if (started) {
             throw IllegalStateException("Server is already up!")
         }
@@ -83,13 +85,16 @@ object Server {
         }
 
         // Listen
-        httpServer.requestHandler(router).listen(Learndesk.properties.getProperty("port", "8000").toInt()) {
+        httpServer.requestHandler(router).listen(Learndesk.properties.getProperty("port").toInt()) {
             if (it.failed()) {
                 log.error("Failed to start HTTP server!", it.cause())
+                future.completeExceptionally(it.cause())
             } else {
                 started = true
                 log.info("HTTP server started successfully, ready to handle requests")
+                future.complete(null)
             }
         }
+        return future
     }
 }

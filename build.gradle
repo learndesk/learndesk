@@ -63,11 +63,17 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     testCompile 'junit:junit:4.12'
+    testCompile "io.vertx:vertx-unit:$vertx_version"
+    testCompile "io.vertx:vertx-web-client:$vertx_version"
     testCompile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_12
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_12
 }
 
 task ktlint(type: JavaExec, group: "verification") {
@@ -140,3 +146,6 @@ static def getCommitHash() {
     p.waitFor()
     p.getIn().text.trim()
 }
+
+sourceCompatibility = JavaVersion.VERSION_12
+targetCompatibility = JavaVersion.VERSION_12

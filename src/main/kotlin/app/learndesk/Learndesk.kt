@@ -23,6 +23,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
+import java.util.concurrent.CompletableFuture
 
 object Learndesk {
     const val LEARNDESK_EPOCH = 1546300800000L
@@ -34,6 +35,11 @@ object Learndesk {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        startup()
+    }
+
+    fun startup(): CompletableFuture<Void> {
+        val future = CompletableFuture<Void>()
         log.info("~~~ Learndesk REST API ~~~")
         if (Version.COMMIT.contains("@")) {
             log.info("Running in debug mode")
@@ -47,14 +53,25 @@ object Learndesk {
         loadProperties()
 
         log.info("Starting vert.x HTTP server")
-        Server.startup()
+        Server.startup().thenAccept {
+            log.info("Learndesk startup complete!")
+            future.complete(null)
+        }
 
-        log.info("Learndesk startup complete!")
+        return future
     }
 
     private fun loadProperties() {
-        val inputStream = File("./config.properties").inputStream()
-        properties.load(inputStream)
-        inputStream.close()
+        val cfg = this.javaClass.classLoader.getResourceAsStream("cfg.properties")
+        if (cfg != null) {
+            properties.load(cfg)
+            cfg.close()
+        }
+        val config = File("./config.properties")
+        if (config.canRead()) {
+            val inputStream = config.inputStream()
+            properties.load(inputStream)
+            inputStream.close()
+        }
     }
 }

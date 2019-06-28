@@ -33,7 +33,7 @@ object Mail {
     private val solicitedMails = listOf("data_harvest")
     private val locales = mutableMapOf<Locale, Pair<Properties, DateFormat>>()
 
-    private val scheduler = Executors.newSingleThreadExecutor()!!
+    private val scheduler = Executors.newSingleThreadExecutor()
 
     init {
         // LOCALES
@@ -51,6 +51,11 @@ object Mail {
     }
 
     fun send(to: String, emailId: String, locale: Locale, variables: Map<String, Any> = emptyMap()) {
+        if (Learndesk.properties.getProperty("smtp.host") == null) {
+            log.warn("Attempted to send an email, but SMTP is not configured! Email won't be sent.")
+            return
+        }
+
         val mail = bakeMail(emailId, locale, variables)
         try {
             val email = HtmlEmail()
@@ -62,9 +67,7 @@ object Mail {
             email.setHtmlMsg(mail.second)
             email.setSmtpPort(Learndesk.properties.getProperty("smtp.port").toInt())
             email.setFrom("noreply@learndesk.app")
-            scheduler.submit {
-                email.send()
-            }
+            scheduler.submit { email.send() }
         } catch (e: Throwable) {
             log.error("Failed to send email!", e)
         }

@@ -79,6 +79,7 @@ object Auth : AbstractRoute() {
             else if (Account.isEmailTaken(Mailcheck.buildEmail(email))) response.put("email", "taken")
 
             if (!USERNAME_REGEX.matches(username)) response.put("username", "format")
+            else if (username.length > 32 || username.length < 2) response.put("username", "length")
             else if (Account.isUsernameTaken(username)) response.put("username", "taken")
 
             if (password.length > 128 || password.length < 6) response.put("password", "length")

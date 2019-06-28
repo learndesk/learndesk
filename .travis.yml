@@ -27,7 +27,7 @@ jobs:
       name: unit
       script:
         - chmod +x gradlew
-        - ./gradlew test
+        - ./gradlew test jacocoTestReport sendCoverageToCodacy
 
     - stage: build
       before_install:

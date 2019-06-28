@@ -69,11 +69,11 @@ dependencies {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_12
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_12
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_11
 }
 
 task ktlint(type: JavaExec, group: "verification") {
@@ -147,5 +147,5 @@ static def getCommitHash() {
     p.getIn().text.trim()
 }
 
-sourceCompatibility = JavaVersion.VERSION_12
-targetCompatibility = JavaVersion.VERSION_12
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11

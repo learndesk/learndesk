@@ -4,8 +4,6 @@ install: true
 jdk:
   - openjdk11
 
-services: mongodb
-
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -25,6 +23,7 @@ jobs:
         - ./gradlew ktlint
 
     - stage: tests
+      services: mongodb
       name: unit
       script:
         - chmod +x gradlew

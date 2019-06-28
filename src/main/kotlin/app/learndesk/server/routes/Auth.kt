@@ -19,6 +19,7 @@
 package app.learndesk.server.routes
 
 import app.learndesk.Learndesk
+import app.learndesk.Mail
 import app.learndesk.database.Account
 import app.learndesk.mailcheck.Mailcheck
 import app.learndesk.misc.end
@@ -26,6 +27,7 @@ import app.learndesk.misc.replyError
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
+import java.util.Locale
 
 object Auth : AbstractRoute() {
     private val USERNAME_REGEX = "^[\\w_-]+$".toRegex()
@@ -54,6 +56,14 @@ object Auth : AbstractRoute() {
         val password = body.getString("password")
         val account = Account.createAccount(Mailcheck.buildEmail(email), username, password)
         ctx.response().end(account)
+
+        // @todo
+        Mail.send(
+            email, "email_confirm", Locale.ENGLISH, mapOf(
+                Pair("pseudo", username),
+                Pair("link", "@todo")
+            )
+        )
     }
 
     // +------------+

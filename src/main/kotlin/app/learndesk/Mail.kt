@@ -99,7 +99,7 @@ object Mail {
             if (localeId.startsWith("title.")) {
                 subject = localized
             }
-            localized
+            localized ?: localeId
         }.replace("\\{\\{ ([a-z0-9_]+) }}".toRegex()) {
             when (val replacement = variables[it.groupValues[1]] ?: "") {
                 is Date -> {

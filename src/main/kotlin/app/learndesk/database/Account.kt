@@ -35,8 +35,6 @@ import java.util.concurrent.Executors
  * @author Bowser65
  */
 object Account {
-    private var haveDocuments = Database.accounts.find().first() != null
-
     private const val ARGON_ITERATION = 3
     private const val ARGON_MEMORY = 128000
     private const val ARGON_PARALLELISM = 4
@@ -44,6 +42,8 @@ object Account {
     private val snowflake = Snowflake(Learndesk.properties.getProperty("worker").toLong(), 0)
     private val executor = Executors.newSingleThreadExecutor()
     private val argon2d = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2d)
+
+    init { createStaffAccount() }
 
     /**
      * Creates a new account and returns it
@@ -64,7 +64,6 @@ object Account {
                     .append("email", email.toString())
                     .append("email_sanitized", email.sanitized)
                     .append("password", hashedPassword)
-                    .append("flags", if (isFirstDocument()) 1 else 0)
             )
             future.complete(Database.accounts.find(BasicDBObject("_id", id)).first())
         }
@@ -94,9 +93,17 @@ object Account {
         return future.await()
     }
 
-    private fun isFirstDocument(): Boolean {
-        val res = !haveDocuments
-        haveDocuments = true
-        return res
+    private fun createStaffAccount() {
+        if (Database.accounts.countDocuments() == 0L) {
+            val id = snowflake.nextId()
+            val hashedPassword = argon2d.hash(ARGON_ITERATION, ARGON_MEMORY, ARGON_PARALLELISM, "i am root")
+            Database.accounts.insertOne(
+                Document("_id", id)
+                    .append("username", "root")
+                    .append("email", "root@learndesk.app")
+                    .append("email_sanitized", "root@learndesk.app")
+                    .append("password", hashedPassword)
+            )
+        }
     }
 }

@@ -10,7 +10,7 @@
 <b>Statuses for develop branch</b>
 
 [![Build Status](https://img.shields.io/travis/learndesk/backend/develop.svg?style=flat-square&logo=travis)](https://travis-ci.org/learndesk/backend)
-[![Code Quality](https://img.shields.io/codacy/grade/dc950813bd044761979096e46db29e3b/13266423.svg?style=flat-square&logo=codacy)](https://www.codacy.com/app/Learndesk/mailcheck)
-[![Code Coverage](https://img.shields.io/codacy/coverage/dc950813bd044761979096e46db29e3b/13266423.svg?style=flat-square&logo=codacy)](https://www.codacy.com/app/Learndesk/mailcheck)
+[![Code Quality](https://img.shields.io/codacy/grade/dc950813bd044761979096e46db29e3b/develop.svg?style=flat-square&logo=codacy)](https://www.codacy.com/app/Learndesk/mailcheck)
+[![Code Coverage](https://img.shields.io/codacy/coverage/dc950813bd044761979096e46db29e3b/develop.svg?style=flat-square&logo=codacy)](https://www.codacy.com/app/Learndesk/mailcheck)
 
 The Kotlin backend for Learndesk

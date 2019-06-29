@@ -34,7 +34,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
 
 @RunWith(value = VertxUnitRunner::class)
-abstract class AbstractLearndeskTest(private val collectionName: String) {
+abstract class AbstractLearndeskTest(private val collectionName: String? = null) {
     @get:Rule
     var rule = RunTestOnContext()
 
@@ -42,6 +42,7 @@ abstract class AbstractLearndeskTest(private val collectionName: String) {
 
     @Before
     fun cleanDatabase() {
+        if (collectionName == null) return
         if (!::collection.isInitialized) {
             val field = Database::class.memberProperties.find { it.name == collectionName }!!
             field.isAccessible = true

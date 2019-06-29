@@ -27,7 +27,7 @@ jobs:
       name: unit
       script:
         - chmod +x gradlew
-        - ./gradlew test jacocoTestReport sendCoverageToCodacy
+        - ./gradlew test jacocoTestReport
 
     - stage: build
       before_install:
@@ -49,3 +49,6 @@ jobs:
         on:
           all_branches: true
           condition: $TRAVIS_BRANCH =~ ^master|develop$
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

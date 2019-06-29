@@ -5,7 +5,6 @@
 .gradle
 build
 out
-/bin/
 
 # Env
 config.properties
@@ -13,10 +12,12 @@ config.properties
 # My stuff
 *.nogit.*
 *.log
+ktlint
 
 # Eclipse
 /.project
 /.classpath
+/bin/
 
 # RSA private keys
 .travisci/private_rsa_keys.tar.gz

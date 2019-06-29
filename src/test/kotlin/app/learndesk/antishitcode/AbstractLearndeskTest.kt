@@ -57,7 +57,12 @@ abstract class AbstractLearndeskTest(private val collectionName: String? = null)
         @BeforeClass
         fun setupLearndesk(ctx: TestContext) {
             val async = ctx.async()
-            Learndesk.startup().thenAccept { async.complete() }
+            try {
+                Learndesk.startup().thenAccept { async.complete() }
+            } catch (_: Throwable) {
+                // this is fine, gradle starts the server automatically not intellij
+                async.complete()
+            }
         }
     }
 }

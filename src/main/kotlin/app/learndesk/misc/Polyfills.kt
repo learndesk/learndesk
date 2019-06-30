@@ -23,12 +23,6 @@ import io.vertx.core.http.HttpServerResponse
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
 
-/**
- * Replies with an error. Automatically sets status code, body and sends it to the client
- *
- * @param code Status code
- * @param message Message sent in the payload. Can be anything that is accepted by JsonObject::put
- */
 fun RoutingContext.replyError(code: Int, message: Any) {
     this.response()
         .setStatusCode(code)
@@ -40,11 +34,6 @@ fun RoutingContext.replyError(code: Int, message: Any) {
         )
 }
 
-/**
- * Replies with a Learndesk entity. The entity will be serialized to JSON
- *
- * @param entity The entity
- */
 fun HttpServerResponse.end(entity: IEntity) {
     this.end(entity.toJson().toBuffer())
 }

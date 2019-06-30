@@ -14,7 +14,12 @@ Registers an account
 
 Possible response status code: 201, 400
 
-Response format: the created account, see `GET /account/me`
+Response format: the created account, see `GET /account/me` plus:
+
+| field | type | description |
+| ----- | ----- | ----- |
+| token | string | an auth token (see [Authentication](REFERENCE.md#authentication)) |
+
 
 > POST /auth/login
 
@@ -234,6 +239,7 @@ Response format:
 | field | type | description |
 | ----- | ----- | ----- |
 | backup_codes | string[] | the backup codes |
+| token | string | a new auth token (see [Authentication](REFERENCE.md#authentication)) |
 
 
 > DELETE /account/mfa
@@ -244,6 +250,7 @@ Disable MFA. Requires password and MFA code
 | ----- | ----- | ----- |
 | code | string | the current MFA code or backup |
 | password | string | the password |
+| token | string | a new auth token (see [Authentication](REFERENCE.md#authentication)) |
 
 Possible response status code: 204, 400, 401
 

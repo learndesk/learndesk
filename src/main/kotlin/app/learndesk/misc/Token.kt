@@ -11,15 +11,14 @@ import javax.crypto.spec.SecretKeySpec
 object Token {
     private const val VERSION = 1
 
-    fun generate(id: String, mfa: Boolean) {
+    fun generate(id: String, mfa: Boolean): String {
         val builder = StringBuilder()
         if (mfa) builder.append("mfa.")
         builder.append(String(Base64.getEncoder().encode(id.toByteArray(Charsets.UTF_8))))
         builder.append(".")
         builder.append(String(Base64.getEncoder().encode(computeTokenTime().toString().toByteArray(Charsets.UTF_8))))
         val part = builder.toString()
-        val token = "$part.${sign(part)}".replace('=', '\u0000')
-        println(token)
+        return "$part.${sign(part)}".replace("=", "")
     }
 
     suspend fun validate(token: String, ignoreMfa: Boolean = false): AccountEntity? {
@@ -31,7 +30,7 @@ object Token {
         val signature = tok[2]
 
         // Validate signature
-        val expectedSign = sign("${if (mfaToken) "mfa." else ""}$accountId.$tokenTime").replace('=', '\u0000')
+        val expectedSign = sign("${if (mfaToken) "mfa." else ""}$accountId.$tokenTime").replace("=", "")
         if (expectedSign != signature) {
             return null
         }

@@ -23,6 +23,7 @@ import app.learndesk.database.entities.AccountEntity
 import app.learndesk.mailcheck.Email
 import app.learndesk.misc.Snowflake
 import app.learndesk.misc.Token
+import com.mongodb.BasicDBList
 import com.mongodb.BasicDBObject
 import de.mkammerer.argon2.Argon2Factory
 import kotlinx.coroutines.future.await
@@ -43,6 +44,9 @@ object Account {
         createStaffAccount()
     }
 
+    // +-------------------+
+    // | Data manipulation |
+    // +-------------------+
     suspend fun create(email: Email, username: String, password: String): AccountEntity {
         val future = CompletableFuture<Document>()
         executor.submit {
@@ -75,6 +79,38 @@ object Account {
         return future.await()
     }
 
+    suspend fun fetchEmail(email: String): AccountEntity? {
+        val future = CompletableFuture<AccountEntity?>()
+        executor.submit {
+            val document = Database.accounts.find(BasicDBObject("email", email)).first()
+            if (document == null) {
+                future.complete(null)
+            } else {
+                future.complete(AccountEntity.build(document))
+            }
+        }
+        return future.await()
+    }
+
+    suspend fun fetchAuth(username: String, password: String): AccountEntity? {
+        val future = CompletableFuture<AccountEntity?>()
+        executor.submit {
+            val or = BasicDBList()
+            or.add(BasicDBObject("email", username))
+            or.add(BasicDBObject("username", username))
+            val document = Database.accounts.find(BasicDBObject("\$or", or)).first()
+            if (document == null || !argon2d.verify(document.getString("password"), password)) {
+                future.complete(null)
+            } else {
+                future.complete(AccountEntity.build(document))
+            }
+        }
+        return future.await()
+    }
+
+    // +---------------+
+    // | Data checking |
+    // +---------------+
     suspend fun isUsernameTaken(username: String): Boolean {
         val future = CompletableFuture<Boolean>()
         executor.submit {
@@ -91,6 +127,9 @@ object Account {
         return future.await()
     }
 
+    // +---------+
+    // | Helpers |
+    // +---------+
     private fun createStaffAccount() {
         if (Database.accounts.countDocuments() == 0L) {
             val id = snowflake.nextId()
@@ -101,6 +140,7 @@ object Account {
                     .append("email", "root@learndesk.app")
                     .append("email_sanitized", "root@learndesk.app")
                     .append("password", hashedPassword)
+                    .append("token_time", Token.computeTokenTime())
                     .append("reset_required", true)
             )
         }

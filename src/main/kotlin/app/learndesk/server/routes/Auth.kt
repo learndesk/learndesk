@@ -22,6 +22,7 @@ import app.learndesk.Learndesk
 import app.learndesk.Mail
 import app.learndesk.database.Account
 import app.learndesk.mailcheck.Mailcheck
+import app.learndesk.misc.Token
 import app.learndesk.misc.end
 import app.learndesk.misc.replyError
 import io.vertx.core.json.JsonObject
@@ -29,17 +30,12 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import java.util.Locale
 
-/**
- * Handler for auth-related routes
- *
- * @author Bowser65
- */
 object Auth : AbstractRoute() {
     private val USERNAME_REGEX = "^[\\w_-]+$".toRegex()
 
     override fun registerRoutes(router: Router) {
         router.post("/auth/register").coroutineHandler(this::handleRegister)
-        // router.post("/auth/login").handler(this::handler)
+        router.post("/auth/login").coroutineHandler(this::handleLogin)
         // router.post("/auth/mfa").handler(this::handler)
         // router.post("/auth/reset").handler(this::handler)
         // router.post("/auth/reset/execute").handler(this::handler)
@@ -69,6 +65,27 @@ object Auth : AbstractRoute() {
                 Pair("link", "@todo")
             )
         )
+    }
+
+    private suspend fun handleLogin(ctx: RoutingContext) {
+        val body = ctx.bodyAsJson ?: return ctx.replyError(400, "bad or missing payload")
+        val errors = validateLogin(body)
+        if (!errors.isEmpty) {
+            return ctx.replyError(400, errors)
+        }
+
+        val username = body.getString("username")
+        val password = body.getString("password")
+        val account = Account.fetchAuth(username, password) ?: return ctx.replyError(401, "invalid credentials")
+        val response = JsonObject()
+            .put("token", Token.generate(account.id.toString(), false))
+            .put("mfa_required", account.mfa)
+
+        if (!account.mfa) {
+            response.put("reset_required", account.resetRequired)
+        }
+
+        ctx.response().end(response.toBuffer())
     }
 
     // +------------+
@@ -102,6 +119,17 @@ object Auth : AbstractRoute() {
 
             if (password.length > 128 || password.length < 6) response.put("password", "length")
         }
+        return response
+    }
+
+    private fun validateLogin(data: JsonObject): JsonObject {
+        val username = data.getValue("username")
+        val password = data.getValue("password")
+        val response = JsonObject()
+
+        if (username == null || username !is String) response.put("username", "invalid")
+        if (password == null || password !is String) response.put("password", "invalid")
+
         return response
     }
 }

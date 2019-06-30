@@ -26,8 +26,8 @@ Note: We'll only document possible HTTP return codes, but not the codes it may r
 ## Rate limiting
 
 To prevent abuses, the API have rate limits in place. As a good practice, **do not hardcode rate limits in your
-application**! Make sure to properly parse headers and make sure you won't hit limits too often. Doing so may result
-in IP bans, so be careful!
+application**, as they might be dynamic! Make sure to properly parse headers and make sure you won't hit limits too
+often. Doing so may result in IP bans, so be careful!
 
 ## Authentication
 
@@ -46,7 +46,8 @@ Account ID              Generation  Signature of everything that preceeds
 ```
 
 MFA tokens are just prefixed with `mfa.` (both in raw token and in signature). The only case where a non-MFA token is
-allowed to perform requests to the API on behalf of an user that has MFA enabled is to finalize authentication.
+allowed to perform requests to the API on behalf of an user that has MFA enabled is to finalize authentication
+(/auth/mfa).
 
 ### Authorization
 

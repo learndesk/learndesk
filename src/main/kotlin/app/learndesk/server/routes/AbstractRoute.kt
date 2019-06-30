@@ -18,6 +18,9 @@
 
 package app.learndesk.server.routes
 
+import app.learndesk.database.entities.AccountEntity
+import app.learndesk.misc.Token
+import app.learndesk.misc.replyError
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
@@ -28,19 +31,9 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
-/**
- * Represents a route
- *
- * @author Bowser65
- */
 abstract class AbstractRoute : CoroutineScope {
     override val coroutineContext: CoroutineContext = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 
-    /**
-     * Allows using a suspend handler
-     *
-     * @param fn The handler
-     */
     fun Route.coroutineHandler(fn: suspend (RoutingContext) -> Unit) {
         handler { ctx ->
             launch(ctx.vertx().dispatcher()) {
@@ -53,30 +46,25 @@ abstract class AbstractRoute : CoroutineScope {
         }
     }
 
-    // This is code I took for another project (that I own mmlol)
-    // It'll need to be adapted to our needs. @see REFERENCE.md
-    //
-    // fun Route.authenticatedHandler(fn: suspend (RoutingContext, User) -> Unit) {
-    //     handler { ctx ->
-    //         launch(ctx.vertx().dispatcher()) {
-    //             try {
-    //                 val token = ctx.request().getHeader("authorization")
-    //                        ?: return@launch ctx.replyError(401, "missing token")
-    //                 val resp = BricoloAPI.requestUtil.get("https://discordapp.com/api/users/@me", createHeaders(Pair("Authorization", "Bearer $token"))).await()?.json()
-    //                         ?: return@launch ctx.replyError(401, "invalid token")
-    //
-    //                 fn(ctx, User.build(resp, token))
-    //             } catch (e: Exception) {
-    //                 ctx.fail(e)
-    //             }
-    //         }
-    //     }
-    // }
+    fun Route.authenticatedHandler(
+        fn: suspend (RoutingContext, AccountEntity) -> Unit,
+        staff: Boolean = false,
+        teacher: Boolean = false
+    ) {
+        coroutineHandler Suspendable@ { ctx ->
+            val token = ctx.request().getHeader("authorization")
+                ?: return@Suspendable ctx.replyError(401, "missing token")
+            val account = Token.validate(token, ctx.request().path().startsWith("/auth/mfa"))
+                ?: return@Suspendable ctx.replyError(401, "invalid token")
 
-    /**
-     * Registers all HTTP routes it handles
-     *
-     * @param router The router
-     */
+            if (
+                (staff && !account.isStaff()) ||
+                (teacher && !account.isTeacher() && !account.isStaff())
+            ) return@Suspendable ctx.replyError(403, "insufficient permissions")
+
+            fn(ctx, account)
+        }
+    }
+
     abstract fun registerRoutes(router: Router)
 }

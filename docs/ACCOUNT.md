@@ -32,6 +32,7 @@ Response format:
 | field | type | description |
 | ----- | ----- | ----- |
 | mfa_required | boolean | true if MFA is required, false otherwise |
+| reset_required? | boolean | true if password reset is required, false otherwise. not present if mfa_required is true |
 | token | string | the non-MFA token (see [Authentication](REFERENCE.md#authentication)) |
 
 
@@ -50,6 +51,7 @@ Response format:
 | field | type | description |
 | ----- | ----- | ----- |
 | token | string | the MFA token (see [Authentication](REFERENCE.md#authentication)) |
+| reset_required | boolean | true if password reset is required, false otherwise |
 
 
 > POST /auth/reset

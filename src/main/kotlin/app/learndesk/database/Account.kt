@@ -19,9 +19,10 @@
 package app.learndesk.database
 
 import app.learndesk.Learndesk
-import app.learndesk.database.entities.Account as AccountEntity
+import app.learndesk.database.entities.AccountEntity
 import app.learndesk.mailcheck.Email
 import app.learndesk.misc.Snowflake
+import app.learndesk.misc.Token
 import com.mongodb.BasicDBObject
 import de.mkammerer.argon2.Argon2Factory
 import kotlinx.coroutines.future.await
@@ -29,11 +30,6 @@ import org.bson.Document
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 
-/**
- * Account database collection
- *
- * @author Bowser65
- */
 object Account {
     private const val ARGON_ITERATION = 3
     private const val ARGON_MEMORY = 128000
@@ -43,17 +39,11 @@ object Account {
     private val executor = Executors.newSingleThreadExecutor()
     private val argon2d = Argon2Factory.create(Argon2Factory.Argon2Types.ARGON2d)
 
-    init { createStaffAccount() }
+    init {
+        createStaffAccount()
+    }
 
-    /**
-     * Creates a new account and returns it
-     *
-     * @param email The email address of the new account
-     * @param username The username of the new account
-     * @param password The clear-text password of rhe new account
-     * @return The created account entity
-     */
-    suspend fun createAccount(email: Email, username: String, password: String): AccountEntity {
+    suspend fun create(email: Email, username: String, password: String): AccountEntity {
         val future = CompletableFuture<Document>()
         executor.submit {
             val id = snowflake.nextId()
@@ -64,6 +54,7 @@ object Account {
                     .append("email", email.toString())
                     .append("email_sanitized", email.sanitized)
                     .append("password", hashedPassword)
+                    .append("token_time", Token.computeTokenTime())
             )
             future.complete(Database.accounts.find(BasicDBObject("_id", id)).first())
         }
@@ -71,9 +62,19 @@ object Account {
         return AccountEntity.build(document)
     }
 
-    /**
-     * @return if an username is taken or not
-     */
+    suspend fun fetch(id: String): AccountEntity? {
+        val future = CompletableFuture<AccountEntity?>()
+        executor.submit {
+            val document = Database.accounts.find(BasicDBObject("_id", id)).first()
+            if (document == null) {
+                future.complete(null)
+            } else {
+                future.complete(AccountEntity.build(document))
+            }
+        }
+        return future.await()
+    }
+
     suspend fun isUsernameTaken(username: String): Boolean {
         val future = CompletableFuture<Boolean>()
         executor.submit {
@@ -82,9 +83,6 @@ object Account {
         return future.await()
     }
 
-    /**
-     * @return if an email is taken or not. uses Mailcheck sanitized email to perform the check
-     */
     suspend fun isEmailTaken(email: Email): Boolean {
         val future = CompletableFuture<Boolean>()
         executor.submit {
@@ -103,6 +101,7 @@ object Account {
                     .append("email", "root@learndesk.app")
                     .append("email_sanitized", "root@learndesk.app")
                     .append("password", hashedPassword)
+                    .append("reset_required", true)
             )
         }
     }

@@ -59,7 +59,7 @@ object Auth : AbstractRoute() {
         val email = body.getString("email")
         val username = body.getString("username")
         val password = body.getString("password")
-        val account = Account.createAccount(Mailcheck.buildEmail(email), username, password)
+        val account = Account.create(Mailcheck.buildEmail(email), username, password)
         ctx.response().end(account)
 
         // @todo

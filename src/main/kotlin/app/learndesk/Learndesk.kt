@@ -25,11 +25,6 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.CompletableFuture
 
-/**
- * Main class for Learndesk
- *
- * @author Bowser65
- */
 object Learndesk {
     const val LEARNDESK_EPOCH = 1546300800000L
     val log: Logger = LoggerFactory.getLogger(Learndesk::class.java)
@@ -38,21 +33,11 @@ object Learndesk {
     // Config
     val properties: Properties = Properties()
 
-    /**
-     * Application entry point
-     *
-     * @param args Arguments
-     */
     @JvmStatic
     fun main(args: Array<String>) {
         startup()
     }
 
-    /**
-     * Starts up Learndesk
-     *
-     * @return A future that'll complete once application is ready
-     */
     fun startup(): CompletableFuture<Void> {
         val future = CompletableFuture<Void>()
         log.info("~~~ Learndesk REST API ~~~")

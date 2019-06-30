@@ -21,34 +21,30 @@ package app.learndesk.database.entities
 import io.vertx.core.json.JsonObject
 import org.bson.Document
 
-/**
- * Represents an user account
- *
- * @author Bowser65
- */
-class Account(
-    private val id: Long,
-    private val username: String,
-    private val firstname: String?,
-    private val lastname: String?,
-    private val birthday: String?,
-    private val avatar: String?,
-    private val verified: Boolean,
-    private val locale: String,
-    private val flags: Int,
-    private val mfa: Boolean
+@Suppress("MemberVisibilityCanBePrivate")
+class AccountEntity(
+    val id: Long,
+    val username: String,
+    val firstname: String?,
+    val lastname: String?,
+    val birthday: String?,
+    val avatar: String?,
+    val verified: Boolean,
+    val locale: String,
+    val flags: Int,
+    val mfa: Boolean,
+    // Internal fields
+    val tokenTime: Long,
+    val resetRequired: Boolean
 ) : IEntity {
+    fun isStaff() = flags and (1 shl 0) != 0
+    fun isTeacher() = flags and (1 shl 1) != 0
+    fun isContributor() = flags and (1 shl 2) != 0
+    fun isBugHunter() = flags and (1 shl 3) != 0
+
+    // General shit
     override fun toJson() = toJson(fname = true, lname = true, bday = true, self = true)
 
-    /**
-     * Serializes the entity to JSON with optional fields
-     *
-     * @param fname If the first name is publicly available
-     * @param lname If the last name is publicly available
-     * @param bday If the birthday date is publicly available
-     * @param self If the private data should be included in the final json
-     * @return The serialized JSON
-     */
     fun toJson(fname: Boolean, lname: Boolean, bday: Boolean, self: Boolean): JsonObject {
         val json = JsonObject()
             .put("id", id.toString())
@@ -68,14 +64,8 @@ class Account(
     }
 
     companion object {
-        /**
-         * Builds an account from a MongoDB document. Document can be partial
-         *
-         * @param document The document
-         * @return The built account
-         */
-        fun build(document: Document): Account {
-            return Account(
+        fun build(document: Document): AccountEntity {
+            return AccountEntity(
                 document.getLong("_id"),
                 document.getString("username"),
                 document.getString("firstname"),
@@ -85,7 +75,10 @@ class Account(
                 document.getBoolean("verified") ?: false,
                 document.getString("locale") ?: "en", // @todo: make this better
                 document.getInteger("flags") ?: 0,
-                document.getBoolean("mfa") ?: false
+                document.getBoolean("mfa") ?: false,
+
+                document.getLong("token_time"),
+                document.getBoolean("reset_required") ?: false
             )
         }
     }

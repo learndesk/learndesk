@@ -29,7 +29,7 @@ import org.junit.Test
 import kotlin.reflect.full.declaredMemberFunctions
 import kotlin.reflect.jvm.isAccessible
 
-class TestAuth : AbstractLearndeskTest("accounts") {
+class TestRegister : AbstractLearndeskTest("accounts") {
 
     @Test
     fun testRootAccount(ctx: TestContext) {

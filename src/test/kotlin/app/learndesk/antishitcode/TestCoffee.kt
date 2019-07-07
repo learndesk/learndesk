@@ -16,9 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package app.learndesk.antishitcode.auth
+package app.learndesk.antishitcode
 
-import app.learndesk.antishitcode.AbstractLearndeskTest
 import io.vertx.ext.unit.TestContext
 import io.vertx.ext.web.client.WebClient
 import org.junit.Test

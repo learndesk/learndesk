@@ -51,7 +51,7 @@ abstract class AbstractRoute : CoroutineScope {
         staff: Boolean = false,
         teacher: Boolean = false
     ) {
-        coroutineHandler Suspendable@ { ctx ->
+        coroutineHandler Suspendable@{ ctx ->
             val token = ctx.request().getHeader("authorization")
                 ?: return@Suspendable ctx.replyError(401, "missing token")
             val account = Token.validate(token, ctx.request().path().startsWith("/auth/mfa"))

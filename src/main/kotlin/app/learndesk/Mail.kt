@@ -1,19 +1,10 @@
 /*
  * Learndesk REST API
- * Copyright (C) 2019 Learndesk
+ * Copyright (C) 2019, Learndesk. All Rights Reserved.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * This program is licensed under the Open Core License.
+ * You should have received a copy of the license along with
+ * this program. If not, see <https://oss.learndesk.app/ocl>.
  */
 
 package app.learndesk
@@ -28,11 +19,6 @@ import java.util.Properties
 import java.util.TimeZone
 import java.util.concurrent.Executors
 
-/**
- * Mail sending utility
- *
- * @author Bowser65
- */
 object Mail {
     private val log: Logger = LoggerFactory.getLogger(Mail::class.java)
     private val solicitedMails = listOf("data_harvest")
@@ -55,14 +41,6 @@ object Mail {
         }
     }
 
-    /**
-     * Formats and sends an email to someone
-     *
-     * @param to Email address of the recipient
-     * @param emailId Filename of the email, see /email/mjml
-     * @param locale Locale the mail should be formatted in
-     * @param variables Variables that'll get injected into the mail
-     */
     fun send(to: String, emailId: String, locale: Locale, variables: Map<String, Any> = emptyMap()) {
         if (Learndesk.properties.getProperty("smtp.host") == null) {
             log.warn("Attempted to send an email, but SMTP is not configured! Email won't be sent.")

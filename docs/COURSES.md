@@ -24,7 +24,7 @@ Response format: The created course, see `GET /courses/:course_id`
 
 > GET /courses
 
-Gets a list of all courses the user have
+Gets a list of all courses the user has
 
 Possible response status code: 200, 401
 
@@ -64,7 +64,7 @@ Response format: May vary depending on if the course is an owned course or a sha
 | files.count | number | file count |
 | files.size | number | total files size in bytes |
 | owned | true | if you own the course |
-| shared_with | number | the number of persons who have access to the course |
+| shared_with | number | the number of people who have access to the course |
 | contents | TBD | course contents |
 
  - Shared course

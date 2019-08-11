@@ -13,12 +13,12 @@ import app.learndesk.Learndesk
 import app.learndesk.database.entities.AccountEntity
 import app.learndesk.mailcheck.Email
 import app.learndesk.misc.Snowflake
-import app.learndesk.misc.Token
 import com.mongodb.BasicDBList
 import com.mongodb.BasicDBObject
 import de.mkammerer.argon2.Argon2Factory
 import kotlinx.coroutines.future.await
 import org.bson.Document
+import xyz.bowser65.tokenize.Tokenize
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 
@@ -49,7 +49,7 @@ object Account {
                     .append("email", email.toString())
                     .append("email_sanitized", email.sanitized)
                     .append("password", hashedPassword)
-                    .append("token_time", Token.computeTokenTime())
+                    .append("token_time", Tokenize.currentTokenTime())
             )
             future.complete(Database.accounts.find(BasicDBObject("_id", id)).first())
         }
@@ -57,8 +57,8 @@ object Account {
         return AccountEntity.build(document)
     }
 
-    suspend fun fetch(id: String): AccountEntity? {
-        val future = CompletableFuture<AccountEntity?>()
+    fun fetchFuture(id: String): CompletableFuture<AccountEntity> {
+        val future = CompletableFuture<AccountEntity>()
         executor.submit {
             val document = Database.accounts.find(BasicDBObject("_id", id)).first()
             if (document == null) {
@@ -67,7 +67,11 @@ object Account {
                 future.complete(AccountEntity.build(document))
             }
         }
-        return future.await()
+        return future
+    }
+
+    suspend fun fetch(id: String): AccountEntity? {
+        return fetchFuture(id).await()
     }
 
     suspend fun fetchEmail(email: String): AccountEntity? {
@@ -131,7 +135,7 @@ object Account {
                     .append("email", "root@learndesk.app")
                     .append("email_sanitized", "root@learndesk.app")
                     .append("password", hashedPassword)
-                    .append("token_time", Token.computeTokenTime())
+                    .append("token_time", Tokenize.currentTokenTime())
                     .append("reset_required", true)
             )
         }

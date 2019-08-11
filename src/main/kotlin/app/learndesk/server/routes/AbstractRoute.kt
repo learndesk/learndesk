@@ -9,8 +9,9 @@
 
 package app.learndesk.server.routes
 
+import app.learndesk.Learndesk
 import app.learndesk.database.entities.AccountEntity
-import app.learndesk.misc.Token
+import app.learndesk.database.Account as DBAccount
 import app.learndesk.misc.replyError
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.Router
@@ -18,7 +19,10 @@ import io.vertx.ext.web.RoutingContext
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.future.await
 import kotlinx.coroutines.launch
+import xyz.bowser65.tokenize.IAccount
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.Executors
 import kotlin.coroutines.CoroutineContext
 
@@ -45,8 +49,14 @@ abstract class AbstractRoute : CoroutineScope {
         coroutineHandler Suspendable@{ ctx ->
             val token = ctx.request().getHeader("authorization")
                 ?: return@Suspendable ctx.replyError(401, "missing token")
-            val account = Token.validate(token, ctx.request().path().startsWith("/auth/mfa"))
-                ?: return@Suspendable ctx.replyError(401, "invalid token")
+
+            @Suppress("UNCHECKED_CAST") // Java have the gayest gay
+            val fetcher = { id: String -> DBAccount.fetchFuture(id) } as (String) -> CompletableFuture<IAccount>
+
+            val account =
+                (Learndesk.tokenize.validate(token, fetcher, ctx.request().path().startsWith("/auth/mfa")).await()
+                    ?: return@Suspendable ctx.replyError(401, "invalid token")) as? AccountEntity
+                    ?: error("unreachable")
 
             if (
                 (staff && !account.isStaff()) ||

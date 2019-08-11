@@ -13,7 +13,6 @@ import app.learndesk.Learndesk
 import app.learndesk.Mail
 import app.learndesk.database.Account
 import app.learndesk.mailcheck.Mailcheck
-import app.learndesk.misc.Token
 import app.learndesk.misc.end
 import app.learndesk.misc.replyError
 import io.vertx.core.json.JsonObject
@@ -69,7 +68,7 @@ object Auth : AbstractRoute() {
         val password = body.getString("password")
         val account = Account.fetchAuth(username, password) ?: return ctx.replyError(401, "invalid credentials")
         val response = JsonObject()
-            .put("token", Token.generate(account.id.toString(), false))
+            .put("token", Learndesk.tokenize.generate(account.id.toString()))
             .put("mfa_required", account.mfa)
 
         if (!account.mfa) {

@@ -12,6 +12,7 @@ package app.learndesk
 import app.learndesk.server.Server
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import xyz.bowser65.tokenize.Tokenize
 import java.io.File
 import java.util.*
 import java.util.concurrent.CompletableFuture
@@ -20,6 +21,8 @@ object Learndesk {
     const val LEARNDESK_EPOCH = 1546300800000L
     val log: Logger = LoggerFactory.getLogger(Learndesk::class.java)
     val startTime = System.currentTimeMillis()
+    lateinit var tokenize: Tokenize
+        private set
 
     // Config
     val properties: Properties = Properties()
@@ -42,6 +45,7 @@ object Learndesk {
 
         log.info("Loading config properties")
         loadProperties()
+        tokenize = Tokenize(properties.getProperty("auth.secret"))
 
         log.info("Starting vert.x HTTP server")
         Server.startup().thenAccept {

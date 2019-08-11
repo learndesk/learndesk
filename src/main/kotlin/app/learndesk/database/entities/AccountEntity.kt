@@ -11,6 +11,7 @@ package app.learndesk.database.entities
 
 import io.vertx.core.json.JsonObject
 import org.bson.Document
+import xyz.bowser65.tokenize.IAccount
 
 @Suppress("MemberVisibilityCanBePrivate")
 class AccountEntity(
@@ -27,11 +28,13 @@ class AccountEntity(
     // Internal fields
     val tokenTime: Long,
     val resetRequired: Boolean
-) : IEntity {
+) : IEntity, IAccount {
     fun isStaff() = flags and (1 shl 0) != 0
     fun isTeacher() = flags and (1 shl 1) != 0
     fun isContributor() = flags and (1 shl 2) != 0
     fun isBugHunter() = flags and (1 shl 3) != 0
+    override fun hasMfa() = mfa
+    override fun tokensValidSince() = tokenTime
 
     // General shit
     override fun toJson() = toJson(fname = true, lname = true, bday = true, self = true)

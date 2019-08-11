@@ -6,9 +6,9 @@
  * You should have received a copy of the license along with
  * this program. If not, see <https://oss.learndesk.app/ocl>.
  */
-
 package app.learndesk.misc
 
+/*
 import app.learndesk.Learndesk
 import app.learndesk.database.Account
 import app.learndesk.database.entities.AccountEntity
@@ -69,3 +69,4 @@ object Token {
         return String(Base64.getEncoder().encode(hmac.doFinal("$data.$VERSION".toByteArray(Charsets.UTF_8))))
     }
 }
+*/

@@ -23,23 +23,28 @@ class AccountEntity(
     val avatar: String?,
     val verified: Boolean,
     val locale: String,
+    val theme: String,
     val flags: Int,
     val mfa: Boolean,
     // Internal fields
     val tokenTime: Long,
-    val resetRequired: Boolean
+    val resetRequired: Boolean,
+    val banned: Boolean
 ) : IEntity, IAccount {
     fun isStaff() = flags and (1 shl 0) != 0
     fun isTeacher() = flags and (1 shl 1) != 0
     fun isContributor() = flags and (1 shl 2) != 0
     fun isBugHunter() = flags and (1 shl 3) != 0
+    fun isTranslator() = flags and (1 shl 4) != 0
+
+    // Tokenize
     override fun hasMfa() = mfa
     override fun tokensValidSince() = tokenTime
 
     // General shit
-    override fun toJson() = toJson(fname = true, lname = true, bday = true, self = true)
+    override fun toJson() = toJson(true)
 
-    fun toJson(fname: Boolean, lname: Boolean, bday: Boolean, self: Boolean): JsonObject {
+    fun toJson(fname: Boolean = true, lname: Boolean = true, bday: Boolean = true, self: Boolean = true): JsonObject {
         val json = JsonObject()
             .put("id", id.toString())
             .put("username", username)
@@ -47,6 +52,7 @@ class AccountEntity(
             .put("lastname", if (lname) lastname else null)
             .put("birthday", if (bday) birthday else null)
             .put("avatar", avatar)
+            .put("theme", theme)
             .put("locale", locale)
             .put("flags", flags)
 
@@ -68,11 +74,13 @@ class AccountEntity(
                 document.getString("avatar"),
                 document.getBoolean("verified") ?: false,
                 document.getString("locale") ?: "en", // @todo: make this better
+                document.getString("theme") ?: "dark",
                 document.getInteger("flags") ?: 0,
                 document.getBoolean("mfa") ?: false,
 
                 document.getLong("token_time"),
-                document.getBoolean("reset_required") ?: false
+                document.getBoolean("reset_required") ?: false,
+                document.getBoolean("banned") ?: false
             )
         }
     }

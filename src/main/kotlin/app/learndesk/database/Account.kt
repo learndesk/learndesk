@@ -94,7 +94,7 @@ object Account {
             or.add(BasicDBObject("email", username))
             or.add(BasicDBObject("username", username))
             val document = Database.accounts.find(BasicDBObject("\$or", or)).first()
-            if (document == null || !argon2d.verify(document.getString("password"), password)) {
+            if (document == null || (!document.getBoolean("banned") && !argon2d.verify(document.getString("password"), password))) {
                 future.complete(null)
             } else {
                 future.complete(AccountEntity.build(document))

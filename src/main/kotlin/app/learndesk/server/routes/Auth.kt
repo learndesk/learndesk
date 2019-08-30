@@ -46,7 +46,9 @@ object Auth : AbstractRoute() {
         val username = body.getString("username")
         val password = body.getString("password")
         val account = Account.create(Mailcheck.buildEmail(email), username, password)
-        ctx.response().end(account)
+        val response =
+            JsonObject().put("id", account.id).put("token", Learndesk.tokenize.generate(account.id.toString()))
+        ctx.response().end(response)
 
         // @todo
         Mail.send(
@@ -67,6 +69,8 @@ object Auth : AbstractRoute() {
         val username = body.getString("username")
         val password = body.getString("password")
         val account = Account.fetchAuth(username, password) ?: return ctx.replyError(401, "invalid credentials")
+        if (account.banned) return ctx.replyError(403, "this account is banned")
+
         val response = JsonObject()
             .put("token", Learndesk.tokenize.generate(account.id.toString()))
             .put("mfa_required", account.mfa)

@@ -11,6 +11,7 @@ package app.learndesk.misc
 
 import app.learndesk.database.entities.IEntity
 import io.vertx.core.http.HttpServerResponse
+import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.web.RoutingContext
 
@@ -28,3 +29,12 @@ fun RoutingContext.replyError(code: Int, message: Any) {
 fun HttpServerResponse.end(entity: IEntity) {
     this.end(entity.toJson().toBuffer())
 }
+
+fun HttpServerResponse.end(obj: JsonObject) {
+    this.end(obj.toBuffer())
+}
+
+fun HttpServerResponse.end(obj: JsonArray) {
+    this.end(obj.toBuffer())
+}
+

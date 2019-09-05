@@ -9,11 +9,17 @@
 
 package app.learndesk.server.routes
 
+import app.learndesk.database.entities.AccountEntity
+import app.learndesk.misc.end
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
 
 object Account : AbstractRoute() {
     override fun registerRoutes(router: Router) {
-        // register routes
-        // router.method("path").handler(this::handler)
+        router.get("/account/me").authenticatedHandler(this::handleMe)
+    }
+
+    private fun handleMe(ctx: RoutingContext, account: AccountEntity) {
+        ctx.response().end(account)
     }
 }

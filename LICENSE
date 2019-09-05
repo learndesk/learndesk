@@ -1,34 +1,28 @@
 Open Core License
-Version 1, 08 July 2019
+Version 1, 25 August 2019
 https://oss.learndesk.app/open-core-license
 
 Copyright (c) 2019, Learndesk
 All Rights Reserved.
 
-"This License" refers to the Open Core License in its version 1.
-"This Program" refers to any copyrightable work licensed under this License.
-"Source Code" refers to the lines of code used to build this Program.
-"Binaries" refers to a compiled or transpiled version of the Source Code.
-"Copyright Holder" refers to the individual or the entity bound to this License.
-"Self Hosting" is action of running the Binaries on your own.
+Non-code material in this repository is released under the
+Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International.
+You can find a summary here: <https://creativecommons.org/licenses/by-nc-sa/4.0>.
+Brand assets are property of the Copyright Holder and you have no rights on them.
 
-Redistribution and use of the Source Code and the Binaries of this Program,
-with or without modification, are allowed provided that the conditions
-given by this License are met.
+ - You can submit Pull Request or open issues.
+   By opening an issue or a pull request, you grant to the Copyright
+   Holder all rights over the content you submitted.
 
- - Redistributions of this Program must be distributed under this License and
-   retain the same copyright notice.
+ - You can copy portions of the source code in your projects, as long
+   as you give proper credits (link to the original project).
 
- - The copyright holder and contributors do not endorse nor promote derived
-   products from this Program without prior written permission.
+ - You cannot redistribute the project source or compiled code, in any
+   way, modified or not. For example, selfhosting isn't allowed.
 
- - Self Hosting is not allowed for non-personal use without a specific prior
-   written permission. You are allowed to do it for personal or educational
-   purposes.
-
- - If this Program is designed to handle private user data, modified versions
-   of this Program must not alter user's privacy on the final product in a
-   malicious way.
+ - Create and/or distribute code that roughly reproduces half of the
+   functionalities of the project. Friendly reminder that copying code,
+   renaming variables and changing whitespace isn't writing your own code.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,

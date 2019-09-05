@@ -44,7 +44,9 @@ abstract class AbstractRoute : CoroutineScope {
     fun Route.authenticatedHandler(
         fn: suspend (RoutingContext, AccountEntity) -> Unit,
         staff: Boolean = false,
-        teacher: Boolean = false
+        teacher: Boolean = false,
+        // Overload memes because java big stupid
+        @Suppress("UNUSED_PARAMETER") __overload_gay: Boolean = false
     ) {
         coroutineHandler Suspendable@{ ctx ->
             val token = ctx.request().getHeader("authorization")
@@ -54,9 +56,8 @@ abstract class AbstractRoute : CoroutineScope {
             val fetcher = { id: String -> DBAccount.fetchFuture(id) } as (String) -> CompletableFuture<IAccount>
 
             val account =
-                (Learndesk.tokenize.validate(token, fetcher, ctx.request().path().startsWith("/auth/mfa")).await()
-                    ?: return@Suspendable ctx.replyError(401, "invalid token")) as? AccountEntity
-                    ?: error("unreachable")
+                Learndesk.tokenize.validate(token, fetcher, ctx.request().path().startsWith("/auth/mfa")).await()
+                    as? AccountEntity ?: return@Suspendable ctx.replyError(401, "invalid token")
 
             if (
                 (staff && !account.isStaff()) ||
@@ -65,6 +66,17 @@ abstract class AbstractRoute : CoroutineScope {
 
             fn(ctx, account)
         }
+    }
+
+    fun Route.authenticatedHandler(
+        fn: (RoutingContext, AccountEntity) -> Unit,
+        staff: Boolean = false,
+        teacher: Boolean = false
+    ) {
+        authenticatedHandler(
+            Suspendable@{ ctx: RoutingContext, acc: AccountEntity -> fn(ctx, acc) },
+            staff, teacher, false
+        )
     }
 
     abstract fun registerRoutes(router: Router)

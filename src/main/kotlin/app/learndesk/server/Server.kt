@@ -34,9 +34,7 @@ object Server {
 
     fun startup(): CompletableFuture<Void> {
         val future = CompletableFuture<Void>()
-        if (started) {
-            throw IllegalStateException("Server is already up!")
-        }
+        check(!started) { "Server is already up!" }
 
         // Error handler
         router.route().failureHandler {

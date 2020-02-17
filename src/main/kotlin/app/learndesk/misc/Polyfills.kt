@@ -37,4 +37,3 @@ fun HttpServerResponse.end(obj: JsonObject) {
 fun HttpServerResponse.end(obj: JsonArray) {
     this.end(obj.toBuffer())
 }
-
